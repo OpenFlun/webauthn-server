@@ -4,5 +4,8 @@
 .github/
 node_modules/
 *.ps1
+*.bak
+*.tgz
+*.tar.gz
 package-lock.json
 维护.md
