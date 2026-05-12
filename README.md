@@ -363,4 +363,5 @@ ISC © [flun](https://github.com/OpenFlun)
 ## 相关链接
 
 - [GitHub 仓库](https://github.com/OpenFlun/webauthn-server)
-- [前端浏览器库 @flun/webauthn-browser](https://www.npmjs.com/package/@flun/webauthn-browser)
+- [npm 包页面](https://www.npmjs.com/package/@flun/webauthn-server)
+- [配套前端库 @flun/webauthn-browser](https://www.npmjs.com/package/@flun/webauthn-browser)
