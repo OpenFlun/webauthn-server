@@ -35,11 +35,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flunGit/webauthn-server.git"
+    "url": "git+https://github.com/OpenFlun/webauthn-server.git"
   },
   "homepage": "https://www.npmjs.com/package/@flun/webauthn-server#readme",
   "bugs": {
-    "url": "https://github.com/flunGit/webauthn-server/issues"
+    "url": "https://github.com/OpenFlun/webauthn-server/issues"
   },
   "license": "ISC",
   "dependencies": {

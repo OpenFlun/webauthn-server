@@ -166,7 +166,7 @@ app.post('/api/login/complete', async (req, res) => {
   const verification = await verifyAuthenticationResponse({
     response,
     expectedChallenge,
-    expectedOrigin: 'http://localhost:3000',
+    expectedOrigin: 'http://localhost:7296',
     expectedRPID: 'localhost',
     credential,
   });
@@ -356,12 +356,11 @@ await fetch('/api/login/complete', {
 
 ## 许可证
 
-ISC © [flun](https://github.com/flunGit)
+ISC © [flun](https://github.com/OpenFlun)
 
 ---
 
 ## 相关链接
 
-- [GitHub 仓库](https://github.com/flunGit/@flun/webauthn-server)
-- [npm 包页面](https://www.npmjs.com/package/@flun/webauthn-server)
+- [GitHub 仓库](https://github.com/OpenFlun/webauthn-server)
 - [前端浏览器库 @flun/webauthn-browser](https://www.npmjs.com/package/@flun/webauthn-browser)
