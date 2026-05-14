@@ -353,13 +353,11 @@ await fetch('/api/login/complete', {
 建议使用 `try...catch` 捕获这些错误并作出相应处理。
 
 ---
-
 ## 许可证
 
 ISC © [flun](https://github.com/OpenFlun)
 
 ---
-
 ## 相关链接
 
 - [GitHub 仓库](https://github.com/OpenFlun/webauthn-server)
