@@ -5,6 +5,7 @@
 .github/
 node_modules/
 *.ps1
+*.bat
 *.bak
 *.tgz
 *.tar.gz
