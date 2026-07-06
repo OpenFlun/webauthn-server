@@ -12,6 +12,8 @@
 - [目录](#目录)
 - [安装](#安装)
   - [Node.js 22.12.0 及以上版本](#nodejs-22120-及以上版本)
+- [配置](#配置)
+  - [允许安装脚本执行](#允许安装脚本执行)
 - [主要功能](#主要功能)
 - [快速开始](#快速开始)
   - [后端集成示例](#后端集成示例)
@@ -43,6 +45,28 @@ npm install @flun/webauthn-server
 ```
 
 > **注意**：本库依赖 Node.js 内置的 `crypto`、`fetch` 等模块，请确保运行环境为 Node.js ≥ 22.12.0。
+
+---
+## 配置
+
+### 允许安装脚本执行
+
+本包在安装时可能触发某些依赖包的自动脚本（如 `postinstall` 等）;如果你的 npm 全局配置或项目配置禁止了脚本执行（例如设置了 `ignore-scripts=true`）,可能会导致安装不完整或运行时异常;
+
+推荐在项目根目录的 `package.json` 中添加 `allowScripts` 字段,显式放行本包及其依赖的脚本:
+
+```json
+{
+  "allowScripts": {
+    "@flun/webauthn-server": true
+    // 如果依赖的其它包（如 bcrypt、electron-winstaller 等）也有脚本,请按需添加,格式相同
+  }
+}
+```
+
+> 如果你信任所有安装包,也可以直接在项目 `.npmrc` 中设置 `allow-scripts = false`（表示关闭脚本拦截,所有脚本均允许执行）,或删除/设为 `ignore-scripts = false`;
+
+配置后,再次运行 `npm install` 即可正常执行所有安装钩子;
 
 ---
 
