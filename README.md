@@ -54,8 +54,6 @@
 
 > 如果你信任所有安装包,也可以直接在项目 `.npmrc` 中设置 `allow-scripts = false`（表示关闭脚本拦截,所有脚本均允许执行）,或删除/设为 `ignore-scripts = false`;
 
-配置后,再次运行 `npm install` 即可正常执行所有安装钩子;
-
 ---
 
 ## 安装
