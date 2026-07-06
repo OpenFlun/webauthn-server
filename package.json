@@ -1,6 +1,6 @@
 {
   "name": "@flun/webauthn-server",
-  "version": "2.0.28",
+  "version": "2.0.29",
   "description": "这是一个专为 Node.js 环境设计的 WebAuthn（含 Passkeys）服务端工具库,提供简洁的 TypeScript 实现,并内置对证书、密钥及 CBOR 编码的完整处理能力,适用于构建 FIDO2/Passkey 身份验证后端",
   "keywords": [
     "typescript",
