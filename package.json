@@ -17,7 +17,9 @@
     ".": "./index.js",
     "./helpers": "./helpers/index.js"
   },
-  "scripts": {},
+  "scripts": {
+    "postinstall": "electron-rebuild -f -w passport-desktop-win32-x64-msvc passport-desktop-win32-ia32-msvc || echo 'Skipping rebuild'"
+  },
   "files": [
     "index.js",
     "index.d.ts",
