@@ -17,6 +17,9 @@
     ".": "./index.js",
     "./helpers": "./helpers/index.js"
   },
+  "scripts": {
+    "postinstall": "electron-rebuild -f -w passport-desktop-win32-x64-msvc passport-desktop-win32-ia32-msvc || echo 'Skipping rebuild'"
+  },
   "files": [
     "index.js",
     "index.d.ts",
@@ -58,6 +61,10 @@
     "npm": ">=10.0.0"
   },
   "devDependencies": {
-    "@types/node": "^26.1.1"
+    "@types/node": "^20.9.0"
+  },
+  "optionalDependencies": {
+    "passport-desktop-win32-x64-msvc": "0.1.2",
+    "passport-desktop-win32-ia32-msvc": "0.1.2"
   }
 }

@@ -3,6 +3,35 @@ import {
     decodeClientDataJSON, toHash, verifySignature, parseAuthenticatorData, parseBackupFlags, matchExpectedRPID
 } from '../helpers/index.js';
 
+// ========== 新增：直接加载独立的 .node 包（Electron + Windows） ==========
+import { createRequire } from 'module';
+import { createPublicKey, createVerify } from 'node:crypto';
+const require = createRequire(import.meta.url);
+
+let PassportClass = null;
+let isNativeAvailable = false;
+const isElectron = !!process.versions?.electron;
+const isWindows = process.platform === 'win32';
+
+if (isElectron && isWindows) {
+    const arch = process.arch; // 'x64' 或 'ia32'
+    const pkgName = `passport-desktop-win32-${arch}-msvc`;
+    try {
+        const binding = require(pkgName);
+        if (binding.Passport) {
+            PassportClass = binding.Passport;
+        } else if (typeof binding.available === 'function') {
+            PassportClass = binding;
+        }
+        if (PassportClass && typeof PassportClass.available === 'function' && PassportClass.available()) {
+            isNativeAvailable = true;
+        }
+    } catch (_) {
+        // 静默失败
+    }
+}
+// ===================================================
+
 // ================================= 生成验证器认证参数 =================================
 /**
  * 生成用于身份验证器认证的参数
@@ -48,6 +77,58 @@ const generateAuthenticationOptions = async options => {
 };
 
 // ================================= 验证是否完成了认证流程 =================================
+
+// ---- 新增：内部原生认证函数 ----
+async function verifyAuthenticationResponseNative(options) {
+    const {
+        credential,
+        expectedChallenge,
+        expectedOrigin,
+        expectedRPID,
+    } = options;
+
+    const accountId = credential.id;
+    if (!accountId) throw new Error('缺少凭证 ID，无法用于 Windows Hello 认证');
+
+    const passport = new PassportClass(accountId);
+    if (!passport.accountExists) {
+        throw new Error(`账号 ${accountId} 不存在，请先注册`);
+    }
+
+    const challengeBuffer = toBuffer(expectedChallenge);
+    const signature = await passport.sign(challengeBuffer);
+
+    // 使用 Node crypto 验证签名
+    const publicKeyDer = credential.publicKey;
+    const key = createPublicKey({
+        key: publicKeyDer,
+        format: 'der',
+        type: 'pkcs1',
+    });
+    const verify = createVerify('SHA256');
+    verify.write(challengeBuffer);
+    verify.end();
+    const verified = verify.verify(key, signature);
+
+    if (!verified) {
+        throw new Error('签名验证失败');
+    }
+
+    return {
+        verified: true,
+        authenticationInfo: {
+            rpID: expectedRPID,
+            newCounter: 0,
+            credentialID: credential.id,
+            userVerified: true,
+            credentialDeviceType: 'multiDevice',
+            credentialBackedUp: false,
+            authenticatorExtensionResults: {},
+            origin: expectedOrigin,
+        },
+    };
+}
+
 /**
  * 验证用户是否合法完成了认证流程
  * - 查看定义:@see {@link verifyAuthenticationResponse}
@@ -92,10 +173,25 @@ const generateAuthenticationOptions = async options => {
  * }>} 验证结果,包含签名是否有效以及认证信息
  */
 const verifyAuthenticationResponse = async options => {
-    const {
-        response, expectedChallenge, expectedOrigin, expectedRPID, expectedType,
-        credential, requireUserVerification = true, advancedFIDOConfig,
-    } = options, { id, rawId, type: credentialType, response: assertionResponse } = response;
+    // ---- 新增：如果环境为 Electron+Windows 且原生可用，直接走原生分支 ----
+    // 注意：认证时使用 credential.id 作为 accountId，无需用户额外传递
+    if (isNativeAvailable && options.credential && options.credential.id) {
+        try {
+            return await verifyAuthenticationResponseNative(options);
+        } catch (err) {
+            // 原生认证失败，抛出明确错误（不降级，因为用户期望原生方式）
+            throw new Error(`Windows Hello 原生认证失败: ${err.message}`);
+        }
+    }
+
+    // ---- 以下为原有标准 WebAuthn 验证逻辑（完全不变） ----
+    const { response, expectedChallenge, expectedOrigin, expectedRPID, expectedType,
+        credential, requireUserVerification = true, advancedFIDOConfig } = options;
+
+    // 确保 response 存在（原有逻辑）
+    if (!response) throw new Error('缺少 response 参数');
+
+    const { id, rawId, type: credentialType, response: assertionResponse } = response;
 
     if (!id) throw new Error('缺少凭证 ID');
     if (id !== rawId) throw new Error('凭证 ID 不是 base64url 编码');
