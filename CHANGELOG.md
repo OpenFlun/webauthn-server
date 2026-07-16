@@ -1,7 +1,7 @@
 # 变更日志
 ## [2.1.0] - 2026-07-16 19:41
 ### 新增
-- 新增支持 @flun/desktop-builder 构建的桌面应用,并且环境为Windows时,优先通过底层实现硬件验证(Windows hello);
+- 新增支持 @flun/desktop-builder 构建的桌面应用,并且环境为Windows时,优先通过底层实现硬件验证(Windows hello),其它环境不变;
 ## [2.0.32] - 2026-07-15 19:22
 ### 更新
 - 依赖包(@types/node)更新;

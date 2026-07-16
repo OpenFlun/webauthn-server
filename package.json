@@ -61,7 +61,7 @@
     "npm": ">=10.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.9.0"
+    "@types/node": "^26.1.1"
   },
   "optionalDependencies": {
     "passport-desktop-win32-x64-msvc": "0.1.2",
