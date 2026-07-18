@@ -16,6 +16,7 @@ import { unwrapEC2Signature } from './iso/unwrapEC2Signature.js';
 import { verifyEC2 } from './iso/verifyEC2.js';
 import { verifyOKP } from './iso/verifyOKP.js';
 import { verifyRSA } from './iso/verifyRSA.js';
+import { getPassportClass, validateResponseStructure, parseAndValidateClientData } from './common.js';
 import { convertAAGUIDToString } from './convertAAGUIDToString.js';
 import { convertCertBufferToPEM } from './convertCertBufferToPEM.js';
 import { convertCOSEtoPKCS } from './convertCOSEtoPKCS.js';
@@ -301,6 +302,20 @@ declare module './iso/index.js' {
     export * from './iso/verifyEC2.js';
     export * from './iso/verifyOKP.js';
     export * from './iso/verifyRSA.js';
+}
+
+// =================================== common.js ===================================
+/**
+ * ```js
+ * // 文件导出内容
+ * getPassportClass();           // 加载 Windows Hello 原生模块（仅 Windows）
+ * validateResponseStructure();  // 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
+ * parseAndValidateClientData(); // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
+ * ```
+ * >查看定义:@see {@link getPassportClass} 、{@link  validateResponseStructure}、{@link parseAndValidateClientData}
+ */
+declare module './common.js' {
+    export * from './common.js';
 }
 
 // ================================= convertAAGUIDToString.js =================================
@@ -843,6 +858,7 @@ declare module './verifySignature.js' {
  */
 declare module './index.js' { }
 export * from './iso/index.js';
+export * from './common.js';
 export * from './convertAAGUIDToString.js';
 export * from './convertCertBufferToPEM.js';
 export * from './convertCOSEtoPKCS.js';

@@ -1,4 +1,5 @@
 export * from './iso/index.js';
+export * from './common.js';
 export * from './convertAAGUIDToString.js';
 export * from './convertCertBufferToPEM.js';
 export * from './convertCOSEtoPKCS.js';

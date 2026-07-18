@@ -3,9 +3,10 @@
 ![WebAuthn](https://img.shields.io/badge/WebAuthn-Simplified-blueviolet?style=for-the-badge&logo=WebAuthn)
 [![npm (scoped)](https://img.shields.io/npm/v/@flun/webauthn-server?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@flun/webauthn-server)
 
-**@flun/webauthn-server** 是一个专为 Node.js 环境设计的 WebAuthn（含 Passkeys）服务端工具库，采用 TypeScript 编写，提供对证书、密钥及 CBOR 编码的完整处理能力。它简化了 FIDO2/Passkey 身份验证后端的构建过程，支持当前所有主流的 WebAuthn 认证格式。
+**@flun/webauthn-server** 是一个专为 Node.js 环境设计的 WebAuthn（含 Passkeys）服务端工具库，采用 TypeScript 编写，提供对证书、密钥及 CBOR 编码的完整处理能力;它简化了 FIDO2/Passkey 身份验证后端的构建过程，支持当前所有主流的 WebAuthn 认证格式;
+并且支持Windows下优先调用底层Windows hello 注册/认证(避免环境干扰与安全);
 
-> **模块规范**：本包使用 ESM 模块编写。要求 Node.js ≥ 22.12.0，若使用低版本 Node 则需通过 `import` 语法导入（不建议在低于 22.12.0 的环境中使用 `require()`）。
+> **模块规范**：本包使用 ESM 模块编写;要求 Node.js ≥ 22.12.0，若使用低版本 Node 则需通过 `import` 语法导入（不建议在低于 22.12.0 的环境中使用 `require()`）;
 
 ## 目录
 
@@ -15,6 +16,7 @@
 - [安装](#安装)
   - [Node.js 22.12.0 及以上版本](#nodejs-22120-及以上版本)
 - [主要功能](#主要功能)
+- [Windows下优先调用底层Windows hello 注册/认证(避免环境干扰与安全);](#windows下优先调用底层windows-hello-注册认证避免环境干扰与安全)
 - [快速开始](#快速开始)
   - [后端集成示例](#后端集成示例)
   - [前端配合说明](#前端配合说明)
@@ -64,34 +66,36 @@
 npm install @flun/webauthn-server
 ```
 
-> **注意**：本库依赖 Node.js 内置的 `crypto`、`fetch` 等模块，请确保运行环境为 Node.js ≥ 22.12.0。
+> **注意**：本库依赖 Node.js 内置的 `crypto`、`fetch` 等模块，请确保运行环境为 Node.js ≥ 22.12.0;
 
 ---
 
 ## 主要功能
 
 - ✅ **WebAuthn 注册与认证**
-  提供 `generateRegistrationOptions` / `verifyRegistrationResponse` 和 `generateAuthenticationOptions` / `verifyAuthenticationResponse` 两对核心方法，完整实现 WebAuthn 后端逻辑。
+  提供 `generateRegistrationOptions` / `verifyRegistrationResponse` 和 `generateAuthenticationOptions` / `verifyAuthenticationResponse` 两对核心方法，完整实现 WebAuthn 后端逻辑;
 
 - ✅ **全格式证明支持**
-  支持 `packed`、`fido-u2f`、`android-safetynet`、`android-key`、`tpm`、`apple`、`none` 等所有标准认证格式。
+  支持 `packed`、`fido-u2f`、`android-safetynet`、`android-key`、`tpm`、`apple`、`none` 等所有标准认证格式;
 
 - ✅ **元数据服务 (MDS)**
-  内置 `MetadataService` 可下载并解析 FIDO 联盟的元数据 BLOB，验证认证器真伪与状态。
+  内置 `MetadataService` 可下载并解析 FIDO 联盟的元数据 BLOB，验证认证器真伪与状态;
 
 - ✅ **证书链验证**
-  提供证书路径验证、吊销检查、X.509 解析等工具。
+  提供证书路径验证、吊销检查、X.509 解析等工具;
 
 - ✅ **丰富的辅助工具**
-  通过 `@flun/webauthn-server/helpers` 子路径导出大量底层工具：Base64URL 编解码、COSE ↔ PKCS 转换、authData 解析、签名验证等。
+  通过 `@flun/webauthn-server/helpers` 子路径导出大量底层工具：Base64URL 编解码、COSE ↔ PKCS 转换、authData 解析、签名验证等;
 
+- ✅ **Windows hello 底层调用**
+   Windows下优先调用底层Windows hello 注册/认证(避免环境干扰与安全);
 ---
 
 ## 快速开始
 
 ### 后端集成示例
 
-以下是一个基于 Express 的完整后端示例，展示了用户注册与登录的 WebAuthn 流程。
+以下是一个基于 Express 的完整后端示例，展示了用户注册与登录的 WebAuthn 流程;
 
 ```js
 import express from 'express';
@@ -207,7 +211,7 @@ app.listen(3001, () => console.log('Backend running on port 3001'));
 
 ### 前端配合说明
 
-前端需使用配套的浏览器库 `@flun/webauthn-browser`，可通过 CDN 或 npm 引入。
+前端需使用配套的浏览器库 `@flun/webauthn-browser`，可通过 CDN 或 npm 引入;
 
 ```html
 <script src="https://unpkg.com/@flun/webauthn-browser/dist/index.js"></script>
@@ -264,7 +268,7 @@ await fetch('/api/login/complete', {
 
 ### 辅助工具函数（`helpers` 模块）
 
-可通过 `@flun/webauthn-server/helpers` 导入所有底层工具。
+可通过 `@flun/webauthn-server/helpers` 导入所有底层工具;
 
 #### 编解码与转换
 
@@ -346,6 +350,8 @@ await fetch('/api/login/complete', {
 | `getRandomValues(arr)`                       | 填充随机字节                       |
 | `verify(algorithm, key, signature, data)`    | 底层验签函数                       |
 
+*** 当前只是部分,更多请自行查看安装包 ***
+
 ---
 
 ## 支持的认证格式
@@ -360,7 +366,7 @@ await fetch('/api/login/complete', {
 - **Apple**
 - **None**
 
-每种格式的验证逻辑均已内置，无需额外配置。
+每种格式的验证逻辑均已内置,无需额外配置;
 
 ---
 
@@ -372,11 +378,10 @@ await fetch('/api/login/complete', {
 - `InvalidSubjectAndIssuer`：证书链无效
 - `InvalidBackupFlags`：备份标志组合非法
 
-建议使用 `try...catch` 捕获这些错误并作出相应处理。
+建议使用 `try...catch` 捕获这些错误并作出相应处理;
 
 ---
 ## 许可证
-
 ISC © [flun](https://github.com/OpenFlun)
 
 ---
