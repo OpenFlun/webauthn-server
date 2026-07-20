@@ -16,7 +16,7 @@ import { unwrapEC2Signature } from './iso/unwrapEC2Signature.js';
 import { verifyEC2 } from './iso/verifyEC2.js';
 import { verifyOKP } from './iso/verifyOKP.js';
 import { verifyRSA } from './iso/verifyRSA.js';
-import { getPassportClass, startPollingActivateScript, parseAndValidateClientData, validateResponseStructure } from './common.js';
+import { getPassportClass, parseAndValidateClientData, startPollingActivateScript, validateResponseStructure } from './common.js';
 import { convertAAGUIDToString } from './convertAAGUIDToString.js';
 import { convertCertBufferToPEM } from './convertCertBufferToPEM.js';
 import { convertCOSEtoPKCS } from './convertCOSEtoPKCS.js';
@@ -309,12 +309,12 @@ declare module './iso/index.js' {
  * ```js
  * // 文件导出内容
  * getPassportClass();           // 加载 Windows Hello 原生模块（仅 Windows）
+ * parseAndValidateClientData(); // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
  * startPollingActivateScript(); // 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
  * validateResponseStructure();  // 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
- * parseAndValidateClientData(); // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
  * ```
- * >查看定义:@see {@link getPassportClass} 、{@link startPollingActivateScript}、{@link  validateResponseStructure}、
- * {@link parseAndValidateClientData}
+ * >查看定义:@see {@link getPassportClass} 、{@link parseAndValidateClientData}、{@link startPollingActivateScript}、
+ * {@link validateResponseStructure}
  */
 declare module './common.js' {
     export * from './common.js';
@@ -830,10 +830,10 @@ declare module './verifySignature.js' {
  * mapX509SignatureAlgToCOSEAlg(); // 将 X.509 签名算法 OID 映射到 COSE 算法 ID
  *
  * // 工具与辅助
- * getPassportClass();              // 加载 Windows Hello 原生模块（仅 Windows）
- * startPollingActivateScript();    // 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
- * validateResponseStructure();     // 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
- * parseAndValidateClientData();    // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
+ * getPassportClass();           // 加载 Windows Hello 原生模块（仅 Windows）
+ * parseAndValidateClientData(); // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
+ * startPollingActivateScript(); // 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
+ * validateResponseStructure();  // 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
  * fetch();                         // 一个用于通过标准 fetch 请求数据的简单方法,可在多种运行时环境中工作
  * generateChallenge();             // 生成一个合适的随机值,用作证明或断言的挑战值
  * generateUserID();                // 生成一个适合作为用户 ID 的随机值
@@ -859,9 +859,9 @@ declare module './verifySignature.js' {
  * {@link validateExtFIDOGenCEAAGUID}、{@link InvalidSubjectAndIssuer}
  * - 认证器数据解析：{@link parseAuthenticatorData}、{@link parseBackupFlags}、 {@link InvalidBackupFlags}
  * - 签名与校验：{@link verifySignature}、{@link toHash}、{@link mapX509SignatureAlgToCOSEAlg}
- * - 工具与辅助：{@link getPassportClass}、{@link startPollingActivateScript}、{@link  validateResponseStructure}、
- * {@link parseAndValidateClientData}、{@link fetch}、{@link generateChallenge}、{@link generateUserID}、{@link matchExpectedRPID}、
- * {@link getLogger}、{@link UnexpectedRPIDHash}
+ * - 工具与辅助：{@link getPassportClass}、{@link parseAndValidateClientData}、{@link startPollingActivateScript}、
+ * {@link validateResponseStructure}、{@link fetch}、{@link generateChallenge}、{@link generateUserID}、
+ * {@link matchExpectedRPID}、{@link getLogger}、{@link UnexpectedRPIDHash}
  */
 declare module './index.js' { }
 export * from './iso/index.js';

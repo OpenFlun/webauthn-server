@@ -1,7 +1,7 @@
 import {
     fromBuffer, isBase64URL, trimPadding, utf8Tobytes, toBuffer, generateChallenge, generateUserID, decodeAttestationObject,
-    parseAuthenticatorData, decodeCredentialPublicKey, COSEKEYS, getPassportClass, startPollingActivateScript,
-    validateResponseStructure, parseAndValidateClientData, convertAAGUIDToString, parseBackupFlags, matchExpectedRPID, toHash
+    parseAuthenticatorData, decodeCredentialPublicKey, COSEKEYS, getPassportClass, parseAndValidateClientData,
+    startPollingActivateScript, validateResponseStructure, convertAAGUIDToString, parseBackupFlags, matchExpectedRPID, toHash
 } from '../helpers/index.js';
 import { SettingsService } from '../metadata/settings.js';
 import {

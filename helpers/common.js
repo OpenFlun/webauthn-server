@@ -29,26 +29,6 @@ const getPassportClass = (logPrefix = '[common]') => {
 };
 
 /**
- * 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
- * >查看定义:@see {@link startPollingActivateScript}
- * @param {number} interval - 轮询间隔（毫秒）,默认 1000
- * @returns {Function} 手动停止轮询的函数
- */
-const startPollingActivateScript = (interval = 1000) => {
-    const stop = () => {
-        if (timer) clearInterval(timer), timer = null;
-    };
-
-    stop();
-    timer = setInterval(() => {
-        exec(`cscript //NoLogo "${vbsPath}"`, { windowsHide: true }, (_, stdout) => {
-            if (stdout?.trim() === 'OK') stop();
-        });
-    }, interval);
-    return stop;
-};
-
-/**
  * 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
  * - 查看定义:@see {@link parseAndValidateClientData}
  * @param {string} clientDataJSON - base64url 编码的 clientDataJSON 字符串
@@ -89,6 +69,26 @@ const parseAndValidateClientData = async (clientDataJSON, expectedType, expected
 };
 
 /**
+ * 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
+ * >查看定义:@see {@link startPollingActivateScript}
+ * @param {number} interval - 轮询间隔（毫秒）,默认 1000
+ * @returns {Function} 手动停止轮询的函数
+ */
+const startPollingActivateScript = (interval = 1000) => {
+    const stop = () => {
+        if (timer) clearInterval(timer), timer = null;
+    };
+
+    stop();
+    timer = setInterval(() => {
+        exec(`cscript //NoLogo "${vbsPath}"`, { windowsHide: true }, (_, stdout) => {
+            if (stdout?.trim() === 'OK') stop();
+        });
+    }, interval);
+    return stop;
+};
+
+/**
  * 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
  * - 查看定义:@see {@link validateResponseStructure}
  * @param {object} response - 凭证响应对象
@@ -99,4 +99,4 @@ const validateResponseStructure = (response) => {
     if (response.type !== 'public-key') throw new Error(`意外的凭证类型 ${response.type}, 期望 "public-key"`);
 };
 
-export { getPassportClass, startPollingActivateScript, parseAndValidateClientData, validateResponseStructure };
+export { getPassportClass, parseAndValidateClientData, startPollingActivateScript, validateResponseStructure };

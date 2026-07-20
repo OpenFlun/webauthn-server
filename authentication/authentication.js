@@ -1,6 +1,6 @@
 import {
     isBase64URL, toBuffer, fromBuffer, trimPadding, concat, utf8Tobytes, generateChallenge, toHash, getPassportClass,
-    startPollingActivateScript, validateResponseStructure, parseAndValidateClientData, parseAuthenticatorData,
+    parseAndValidateClientData, startPollingActivateScript, validateResponseStructure, parseAuthenticatorData,
     parseBackupFlags, matchExpectedRPID, verifySignature
 } from '../helpers/index.js';
 import { createPublicKey, createVerify } from 'node:crypto';
