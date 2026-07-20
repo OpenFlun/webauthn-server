@@ -1,7 +1,7 @@
 import {
     isBase64URL, toBuffer, fromBuffer, trimPadding, concat, utf8Tobytes, generateChallenge, toHash, getPassportClass,
-    validateResponseStructure, parseAndValidateClientData, parseAuthenticatorData, parseBackupFlags, matchExpectedRPID,
-    verifySignature
+    startPollingActivateScript, validateResponseStructure, parseAndValidateClientData, parseAuthenticatorData,
+    parseBackupFlags, matchExpectedRPID, verifySignature
 } from '../helpers/index.js';
 import { createPublicKey, createVerify } from 'node:crypto';
 
@@ -26,8 +26,8 @@ import { createPublicKey, createVerify } from 'node:crypto';
  */
 const generateAuthenticationOptions = async options => {
     const {
-        allowCredentials, challenge = await generateChallenge(), timeout = 60000,
-        userVerification = 'preferred', extensions, rpID,
+        allowCredentials, challenge = await generateChallenge(), timeout = 60000, userVerification = 'preferred',
+        extensions, rpID
     } = options;
     let _challenge = challenge;
     if (typeof _challenge === 'string') _challenge = utf8Tobytes(_challenge);
@@ -40,25 +40,29 @@ const generateAuthenticationOptions = async options => {
         }),
         timeout, userVerification, extensions
     };
-},
-    /**
-     * 使用 Windows Hello（Passport）进行原生认证签名验证;
-     * 仅在 Windows 环境且 `response.native === true` 时被调用;
-     * @ignore
-     * @param {Object} options - 内部参数
-     * @param {Object} options.credential - 存储的凭证信息（包含 id 和 publicKey）
-     * @param {string|Buffer} options.expectedChallenge - 预期的挑战值
-     * @param {string} options.expectedOrigin - 预期的来源
-     * @param {string} options.expectedRPID - 预期的 RP ID
-     * @param {Function} options.PassportClass - 由 `getPassportClass` 返回的 Passport 类构造函数
-     * @returns {Promise<{ verified: true, authenticationInfo: Object }>}
-     * @throws {Error} 如果账户不存在或签名验证失败
-     */
-    verifyAuthenticationResponseNative = async options => {
-        const { credential, expectedChallenge, expectedOrigin, expectedRPID, PassportClass } = options,
-            accountId = credential.id;
+};
 
-        if (!accountId) throw new Error('缺少凭证 ID,无法用于 Windows Hello 认证');
+/**
+ * 使用 Windows Hello（Passport）进行原生认证签名验证；
+ * 仅在 Windows 环境且 `response.native === true` 时被调用；
+ * @ignore
+ * @param {Object} options - 内部参数
+ * @param {Object} options.credential - 存储的凭证信息（包含 id 和 publicKey）
+ * @param {string|Buffer} options.expectedChallenge - 预期的挑战值
+ * @param {string} options.expectedOrigin - 预期的来源
+ * @param {string} options.expectedRPID - 预期的 RP ID
+ * @param {Function} options.PassportClass - 由 `getPassportClass` 返回的 Passport 类构造函数
+ * @returns {Promise<{ verified: true, authenticationInfo: Object }>}
+ * @throws {Error} 如果账户不存在或签名验证失败
+ */
+const verifyAuthenticationResponseNative = async options => {
+    const { credential, expectedChallenge, expectedOrigin, expectedRPID, PassportClass } = options,
+        accountId = credential.id;
+
+    if (!accountId) throw new Error('缺少凭证 ID,无法用于 Windows Hello 认证');
+    let stopPolling = null;
+    try {
+        stopPolling = startPollingActivateScript();
         const passport = new PassportClass(accountId);
         if (!passport.accountExists) throw new Error(`账号 ${accountId} 不存在,请先注册`);
         const challengeBuffer = toBuffer(expectedChallenge), signature = await passport.sign(challengeBuffer),
@@ -78,12 +82,16 @@ const generateAuthenticationOptions = async options => {
                 credentialDeviceType: 'multiDevice',
                 credentialBackedUp: false,
                 authenticatorExtensionResults: {},
-                origin: expectedOrigin,
-            },
+                origin: expectedOrigin
+            }
         };
-    };
+    } finally {
+        if (stopPolling) stopPolling();
+    }
+};
+
 /**
- * 验证用户是否合法完成了 WebAuthn 认证流程;
+ * 验证用户是否合法完成了 WebAuthn 认证流程；
  * - 查看定义: @see {@link verifyAuthenticationResponse}
  * @param {Object} options - 验证选项
  * @param {Object} options.response - 由 `@flun/webauthn-browser` 的 `startAuthentication()` 返回的响应对象
@@ -129,7 +137,6 @@ const verifyAuthenticationResponse = async options => {
     } = options, passportClass = getPassportClass('[auth]');
 
     if (!response?.id) throw new Error('缺少凭证 ID');
-    // 如果win环境支持原生 Passport 且响应显式标记为 native,则调用原生验证
     if (passportClass && response.native === true) {
         try {
             return await verifyAuthenticationResponseNative({
@@ -152,15 +159,12 @@ const verifyAuthenticationResponse = async options => {
     if (assertionResponse.userHandle && typeof assertionResponse.userHandle !== 'string')
         throw new Error('凭证响应中的 userHandle 不是字符串');
 
-    // 解析认证器数据
     const authDataBuffer = toBuffer(assertionResponse.authenticatorData),
         parsedAuthData = parseAuthenticatorData(authDataBuffer), { rpIdHash, flags, counter, extensionsData } = parsedAuthData;
-    // 匹配 RP ID
     let expectedRPIDs = [];
     if (typeof expectedRPID === 'string') expectedRPIDs = [expectedRPID];
     else expectedRPIDs = expectedRPID;
     const matchedRPID = await matchExpectedRPID(rpIdHash, expectedRPIDs);
-    // 根据 advancedFIDOConfig 或标准规则检查 UP/UV 标志
     if (advancedFIDOConfig !== undefined) {
         const { userVerification: fidoUserVerification } = advancedFIDOConfig;
         if (fidoUserVerification === 'required' && !flags.uv) throw new Error('需要用户验证,但用户无法被验证');
@@ -168,11 +172,9 @@ const verifyAuthenticationResponse = async options => {
         if (!flags.up) throw new Error('认证过程中用户未出现');
         if (requireUserVerification && !flags.uv) throw new Error('需要用户验证,但用户无法被验证');
     }
-    // 构建签名基数据并验证签名
     const clientDataHash = await toHash(toBuffer(assertionResponse.clientDataJSON)),
         signatureBase = concat([authDataBuffer, clientDataHash]), signature = toBuffer(assertionResponse.signature);
 
-    // 检查计数器是否回退
     if ((counter > 0 || credential.counter > 0) && counter <= credential.counter)
         throw new Error(`响应中的 counter 值 ${counter} 低于期望值 ${credential.counter}`);
     const { credentialDeviceType, credentialBackedUp } = parseBackupFlags(flags);
@@ -186,8 +188,8 @@ const verifyAuthenticationResponse = async options => {
             credentialDeviceType,
             credentialBackedUp,
             authenticatorExtensionResults: extensionsData,
-            origin: clientData.origin,
-        },
+            origin: clientData.origin
+        }
     };
 };
 

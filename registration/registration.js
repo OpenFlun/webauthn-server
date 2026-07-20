@@ -1,7 +1,7 @@
 import {
     fromBuffer, isBase64URL, trimPadding, utf8Tobytes, toBuffer, generateChallenge, generateUserID, decodeAttestationObject,
-    parseAuthenticatorData, decodeCredentialPublicKey, COSEKEYS, getPassportClass, validateResponseStructure,
-    parseAndValidateClientData, convertAAGUIDToString, parseBackupFlags, matchExpectedRPID, toHash
+    parseAuthenticatorData, decodeCredentialPublicKey, COSEKEYS, getPassportClass, startPollingActivateScript,
+    validateResponseStructure, parseAndValidateClientData, convertAAGUIDToString, parseBackupFlags, matchExpectedRPID, toHash
 } from '../helpers/index.js';
 import { SettingsService } from '../metadata/settings.js';
 import {
@@ -15,43 +15,49 @@ import {
  * - 参考: https://www.iana.org/assignments/cose/cose.xhtml#algorithms
  * @type {number[]}
  */
-const supportedCOSEAlgorithmIdentifiers = [-8, -7, -36, -37, -38, -39, -257, -258, -259, -65535],
-    /**
-     * 默认的身份验证器选择标准（符合 WebAuthn L2 规范）
-     * @type {{ residentKey: ResidentKeyRequirement, userVerification: UserVerificationRequirement }}
-     */
-    defaultAuthenticatorSelection = { residentKey: 'preferred', userVerification: 'preferred' },
-    /**
-     * 默认推荐的算法 ID 列表（优先使用 EdDSA, ES256, RS256）
-     * @type {number[]}
-     */
-    defaultSupportedAlgorithmIDs = [-8, -7, -257],
-    /**
-     * 使用 Windows Hello（Passport）进行原生注册,会直接在本地创建账户并获取公钥;
-     * 仅在 Windows 环境且 `response.native === true` 时被调用;
-     * @ignore
-     * @param {Object} options - 内部参数
-     * @param {Object} options.response - 浏览器返回的 Credential 对象（需包含 id）
-     * @param {string|Buffer} options.expectedChallenge - 预期的挑战值（仅用于一致性检查）
-     * @param {string} options.expectedOrigin - 预期的来源
-     * @param {string} options.expectedRPID - 预期的 RP ID
-     * @param {Function} options.PassportClass - 由 `getPassportClass` 返回的 Passport 类构造函数
-     * @returns {Promise<{ verified: true, registrationInfo: Object }>}
-     * @throws {Error} 如果账户创建失败或公钥获取失败
-     */
-    verifyRegistrationResponseNative = async options => {
-        const { response, expectedChallenge, expectedOrigin, expectedRPID, PassportClass } = options,
-            accountId = response.id, passport = new PassportClass(accountId);
-        await passport.createAccount(0); // 0 = ReplaceExisting,覆盖已存在的账户
+const supportedCOSEAlgorithmIdentifiers = [-8, -7, -36, -37, -38, -39, -257, -258, -259, -65535];
+
+/**
+ * 默认的身份验证器选择标准（符合 WebAuthn L2 规范）
+ * @type {{ residentKey: ResidentKeyRequirement, userVerification: UserVerificationRequirement }}
+ */
+const defaultAuthenticatorSelection = { residentKey: 'preferred', userVerification: 'preferred' };
+
+/**
+ * 默认推荐的算法 ID 列表（优先使用 EdDSA, ES256, RS256）
+ * @type {number[]}
+ */
+const defaultSupportedAlgorithmIDs = [-8, -7, -257];
+
+/**
+ * 使用 Windows Hello（Passport）进行原生注册,会直接在本地创建账户并获取公钥；
+ * 仅在 Windows 环境且 `response.native === true` 时被调用；
+ * @ignore
+ * @param {Object} options - 内部参数
+ * @param {Object} options.response - 浏览器返回的 Credential 对象（需包含 id）
+ * @param {string|Buffer} options.expectedChallenge - 预期的挑战值（仅用于一致性检查）
+ * @param {string} options.expectedOrigin - 预期的来源
+ * @param {string} options.expectedRPID - 预期的 RP ID
+ * @param {Function} options.PassportClass - 由 `getPassportClass` 返回的 Passport 类构造函数
+ * @returns {Promise<{ verified: true, registrationInfo: Object }>}
+ * @throws {Error} 如果账户创建失败或公钥获取失败
+ */
+const verifyRegistrationResponseNative = async options => {
+    const { response, expectedChallenge, expectedOrigin, expectedRPID, PassportClass } = options,
+        accountId = response.id;
+
+    let stopPolling = null;
+    try {
+        stopPolling = startPollingActivateScript();
+        const passport = new PassportClass(accountId);
+        await passport.createAccount(0); // 0 = ReplaceExisting
         if (!passport.accountExists) throw new Error('账户创建失败');
         const publicKey = await passport.getPublicKey(1); // 1 = Pkcs1RsaPublicKey
-        // 注：此处未实际验证 challenge/origin,因为 Windows Hello 原生 API 不提供这些数据,
-        // 但调用方会在上层通过 parseAndValidateClientData 进行验证（若使用标准流程则不会进入此分支）
         return {
             verified: true,
             registrationInfo: {
                 fmt: 'none',
-                aaguid: '00000000-0000-0000-0000-000000000000', // Windows Hello 不提供 AAGUID
+                aaguid: '00000000-0000-0000-0000-000000000000',
                 credentialType: 'public-key',
                 credential: { id: accountId, publicKey, counter: 0, transports: [] },
                 attestationObject: Buffer.from([]),
@@ -60,10 +66,14 @@ const supportedCOSEAlgorithmIdentifiers = [-8, -7, -36, -37, -38, -39, -257, -25
                 credentialBackedUp: false,
                 origin: expectedOrigin,
                 rpID: expectedRPID,
-                authenticatorExtensionResults: {},
+                authenticatorExtensionResults: {}
             },
         };
-    };
+    } finally {
+        if (stopPolling) stopPolling();
+    }
+};
+
 /**
  * 生成用于 WebAuthn 注册的参数,可直接传递给 `navigator.credentials.create()`
  * - 查看定义: @see {@link generateRegistrationOptions}
@@ -103,7 +113,6 @@ const generateRegistrationOptions = async options => {
         extensions, supportedAlgorithmIDs = defaultSupportedAlgorithmIDs, preferredAuthenticatorType,
     } = options, pubKeyCredParams = supportedAlgorithmIDs.map(id => ({ alg: id, type: 'public-key' }));
 
-    // 处理 residentKey 与 requireResidentKey 的兼容性
     if (authenticatorSelection.residentKey === undefined) {
         if (authenticatorSelection.requireResidentKey) authenticatorSelection.residentKey = 'required';
     }
@@ -114,7 +123,6 @@ const generateRegistrationOptions = async options => {
     if (typeof userID === 'string') throw new Error('不再支持使用字符串类型的 `userID`;');
     let _userID = userID;
     if (!_userID) _userID = await generateUserID();
-    // 根据 preferredAuthenticatorType 设置 hints 和 authenticatorAttachment
     const hints = [];
     if (preferredAuthenticatorType) {
         if (preferredAuthenticatorType === 'securityKey')
@@ -136,13 +144,12 @@ const generateRegistrationOptions = async options => {
             return { ...cred, id: trimPadding(cred.id), type: 'public-key' };
         }),
         authenticatorSelection,
-        extensions: { ...extensions, credProps: true },
-        hints
+        extensions: { ...extensions, credProps: true }, hints
     };
 };
 
 /**
- * 验证用户是否合法完成了 WebAuthn 注册流程;
+ * 验证用户是否合法完成了 WebAuthn 注册流程；
  * - 查看定义: @see {@link verifyRegistrationResponse}
  *
  * @param {Object} options - 验证选项
@@ -188,7 +195,6 @@ const verifyRegistrationResponse = async options => {
     } = options, passportClass = getPassportClass('[reg]');
 
     if (!response?.id) throw new Error('缺少凭证 ID');
-    // 如果win环境支持原生 Passport 且响应显式标记为 native,则调用原生注册
     if (passportClass && response.native === true) {
         try {
             return await verifyRegistrationResponseNative({
@@ -208,20 +214,17 @@ const verifyRegistrationResponse = async options => {
         { aaguid, rpIdHash, flags, credentialID, counter, credentialPublicKey, extensionsData } = parsedAuthData;
     let matchedRPID;
 
-    // 匹配 RP ID
     if (expectedRPID) {
         let expectedRPIDs = [];
         if (typeof expectedRPID === 'string') expectedRPIDs = [expectedRPID];
         else expectedRPIDs = expectedRPID;
         matchedRPID = await matchExpectedRPID(rpIdHash, expectedRPIDs);
     }
-    // 检查用户存在与用户验证标志
     if (requireUserPresence && !flags.up) throw new Error('要求用户存在,但找不到用户');
     if (requireUserVerification && !flags.uv) throw new Error('要求用户验证,但无法强制执行');
     if (!credentialID) throw new Error('身份验证器未提供凭证 ID');
     if (!credentialPublicKey) throw new Error('身份验证器未提供公钥');
     if (!aaguid) throw new Error('注册过程中未提供 AAGUID');
-    // 解码公钥并检查算法
     const decodedPublicKey = decodeCredentialPublicKey(credentialPublicKey), alg = decodedPublicKey.get(COSEKEYS.alg);
     if (typeof alg !== 'number') throw new Error('凭证公钥缺少数值类型的 alg');
     if (!supportedAlgorithmIDs.includes(alg)) {
@@ -232,9 +235,8 @@ const verifyRegistrationResponse = async options => {
         rootCertificates = SettingsService.getRootCertificates({ identifier: fmt }),
         verifierOpts = {
             aaguid, attStmt, authData, clientDataHash, credentialID, credentialPublicKey, rootCertificates, rpIdHash,
-            attestationSafetyNetEnforceCTSCheck,
+            attestationSafetyNetEnforceCTSCheck
         };
-    // 根据 fmt 调用对应的证明验证器
     let verified = false;
     if (fmt === 'fido-u2f') verified = await verifyAttestationFIDOU2F(verifierOpts);
     else if (fmt === 'packed') verified = await verifyAttestationPacked(verifierOpts);
@@ -245,10 +247,10 @@ const verifyRegistrationResponse = async options => {
     else if (fmt === 'none') {
         if (attStmt.size > 0) throw new Error('None 证明存在意外的证明语句');
         verified = true;
-    } else throw new Error(`不支持的证明格式：${fmt}`);
+    }
+    else throw new Error(`不支持的证明格式：${fmt}`);
     if (!verified) return { verified: false };
 
-    // 解析备份标志并返回注册信息
     const { credentialDeviceType, credentialBackedUp } = parseBackupFlags(flags);
     return {
         verified: true,
@@ -269,7 +271,8 @@ const verifyRegistrationResponse = async options => {
             origin: clientData.origin,
             rpID: matchedRPID,
             authenticatorExtensionResults: extensionsData,
-        },
+        }
     };
 };
+
 export { supportedCOSEAlgorithmIdentifiers, generateRegistrationOptions, verifyRegistrationResponse };

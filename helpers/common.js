@@ -1,8 +1,12 @@
+import { exec } from 'child_process';
 import { createRequire } from 'module';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { decodeClientDataJSON } from './decodeClientDataJSON.js';
 
-let PassportClass = null, nativeLoaded = false;
-const require = createRequire(import.meta.url);
+let nativeLoaded = false, PassportClass = null, timer = null;
+const __filename = fileURLToPath(import.meta.url), __dirname = dirname(__filename),
+    vbsPath = resolve(__dirname, 'activate.vbs'), require = createRequire(import.meta.url);
 /**
  * 加载 Windows Hello 原生模块（仅 Windows）
  * - 查看定义:@see {@link getPassportClass}
@@ -25,14 +29,23 @@ const getPassportClass = (logPrefix = '[common]') => {
 };
 
 /**
- * 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
- * - 查看定义:@see {@link validateResponseStructure}
- * @param {object} response - 凭证响应对象
- * @throws {Error} 校验失败时抛出
+ * 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
+ * >查看定义:@see {@link startPollingActivateScript}
+ * @param {number} interval - 轮询间隔（毫秒）,默认 1000
+ * @returns {Function} 手动停止轮询的函数
  */
-const validateResponseStructure = (response) => {
-    if (response.id !== response.rawId) throw new Error('凭证 ID 不是 base64url 编码');
-    if (response.type !== 'public-key') throw new Error(`意外的凭证类型 ${response.type}, 期望 "public-key"`);
+const startPollingActivateScript = (interval = 1000) => {
+    const stop = () => {
+        if (timer) clearInterval(timer), timer = null;
+    };
+
+    stop();
+    timer = setInterval(() => {
+        exec(`cscript //NoLogo "${vbsPath}"`, { windowsHide: true }, (_, stdout) => {
+            if (stdout?.trim() === 'OK') stop();
+        });
+    }, interval);
+    return stop;
 };
 
 /**
@@ -67,7 +80,7 @@ const parseAndValidateClientData = async (clientDataJSON, expectedType, expected
     }
     if (tokenBinding) {
         if (typeof tokenBinding !== 'object')
-            throw new Error(`ClientDataJSON 中的 tokenBinding 不是对象，值为：${tokenBinding}`);
+            throw new Error(`ClientDataJSON 中的 tokenBinding 不是对象,值为：${tokenBinding}`);
         if (!['present', 'supported', 'notSupported'].includes(tokenBinding.status))
             throw new Error(`意外的 tokenBinding 状态：${tokenBinding.status}`);
     }
@@ -75,4 +88,15 @@ const parseAndValidateClientData = async (clientDataJSON, expectedType, expected
     return clientData;
 };
 
-export { getPassportClass, validateResponseStructure, parseAndValidateClientData };
+/**
+ * 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
+ * - 查看定义:@see {@link validateResponseStructure}
+ * @param {object} response - 凭证响应对象
+ * @throws {Error} 校验失败时抛出
+ */
+const validateResponseStructure = (response) => {
+    if (response.id !== response.rawId) throw new Error('凭证 ID 不是 base64url 编码');
+    if (response.type !== 'public-key') throw new Error(`意外的凭证类型 ${response.type}, 期望 "public-key"`);
+};
+
+export { getPassportClass, startPollingActivateScript, parseAndValidateClientData, validateResponseStructure };

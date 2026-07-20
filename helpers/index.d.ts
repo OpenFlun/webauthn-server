@@ -16,7 +16,7 @@ import { unwrapEC2Signature } from './iso/unwrapEC2Signature.js';
 import { verifyEC2 } from './iso/verifyEC2.js';
 import { verifyOKP } from './iso/verifyOKP.js';
 import { verifyRSA } from './iso/verifyRSA.js';
-import { getPassportClass, validateResponseStructure, parseAndValidateClientData } from './common.js';
+import { getPassportClass, startPollingActivateScript, parseAndValidateClientData, validateResponseStructure } from './common.js';
 import { convertAAGUIDToString } from './convertAAGUIDToString.js';
 import { convertCertBufferToPEM } from './convertCertBufferToPEM.js';
 import { convertCOSEtoPKCS } from './convertCOSEtoPKCS.js';
@@ -241,7 +241,7 @@ declare module './iso/verifyRSA.js' {
  * // 导出元素说明（按导入顺序排列）：
  *
  * // 常量
- * const _getWebCryptoInternals             // 内部测试辅助对象，用于模拟和重置缓存
+ * const _getWebCryptoInternals             // 内部测试辅助对象,用于模拟和重置缓存
  *
  * // 类
  * class MissingWebCrypto {}               // 当无法在当前运行时环境中定位到 Crypto API 实例时抛出的错误
@@ -309,10 +309,12 @@ declare module './iso/index.js' {
  * ```js
  * // 文件导出内容
  * getPassportClass();           // 加载 Windows Hello 原生模块（仅 Windows）
+ * startPollingActivateScript(); // 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
  * validateResponseStructure();  // 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
  * parseAndValidateClientData(); // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
  * ```
- * >查看定义:@see {@link getPassportClass} 、{@link  validateResponseStructure}、{@link parseAndValidateClientData}
+ * >查看定义:@see {@link getPassportClass} 、{@link startPollingActivateScript}、{@link  validateResponseStructure}、
+ * {@link parseAndValidateClientData}
  */
 declare module './common.js' {
     export * from './common.js';
@@ -348,7 +350,7 @@ declare module './convertCertBufferToPEM.js' {
 /**
  * ```js
  * // 文件导出内容:
- * convertCOSEtoPKCS(); // 接收 COSE 编码的公钥，并将其转换为 PKCS 密钥
+ * convertCOSEtoPKCS(); // 接收 COSE 编码的公钥,并将其转换为 PKCS 密钥
  * ```
  * ---
  * >查看定义:@see {@link convertCOSEtoPKCS}
@@ -374,7 +376,7 @@ declare module './convertPEMToBytes.js' {
 /**
  * ```js
  * // 文件导出内容:
- * convertX509PublicKeyToCOSE(); // 从 X.509 证书（DER 格式）中提取公钥，并将其转换为 COSE 公钥结构
+ * convertX509PublicKeyToCOSE(); // 从 X.509 证书（DER 格式）中提取公钥,并将其转换为 COSE 公钥结构
  * ```
  * ---
  * >查看定义:@see {@link convertX509PublicKeyToCOSE}
@@ -460,7 +462,7 @@ declare module './decodeAttestationObject.js' {
     };
 
     /**
-     * `AttestationStatement` 是一个 `Map` 实例，但以下键限定了其中可能存在的值范围。
+     * `AttestationStatement` 是一个 `Map` 实例,但以下键限定了其中可能存在的值范围。
      */
     export type AttestationStatement = {
         get(key: 'sig'): Uint8Array_ | undefined, get(key: 'x5c'): Uint8Array_[] | undefined;
@@ -796,7 +798,7 @@ declare module './verifySignature.js' {
  * convertCertBufferToPEM();     // 将缓冲区转换为 OpenSSL 兼容的 PEM 文本格式
  * convertCOSEtoPKCS();          // 接收 COSE 编码的公钥,并将其转换为 PKCS 密钥
  * convertPEMToBytes();          // 将 PEM 格式的证书转换为字节数组
- * convertX509PublicKeyToCOSE(); // 从 X.509 证书（DER 格式）中提取公钥，并将其转换为 COSE 公钥结构
+ * convertX509PublicKeyToCOSE(); // 从 X.509 证书（DER 格式）中提取公钥,并将其转换为 COSE 公钥结构
  *
  * // COSE 公钥处理
  * // 枚举常量
@@ -812,27 +814,31 @@ declare module './verifySignature.js' {
  *
  * // 证书处理
  * getCertificateInfo();            // 提取 PEM 证书信息
- * isCertRevoked();                 // 从证书中获取证书吊销列表（CRL），并将其中的序列号与 CRL 内已吊销证书的序列号进行比对
- * validateCertificatePath();       // 遍历 PEM 证书数组，确保形成有效的证书链
+ * isCertRevoked();                 // 从证书中获取证书吊销列表（CRL）,并将其中的序列号与 CRL 内已吊销证书的序列号进行比对
+ * validateCertificatePath();       // 遍历 PEM 证书数组,确保形成有效的证书链
  * validateExtFIDOGenCEAAGUID();    // 查找 FIDO Gen CE AAGUID 证书扩展并比对 AAGUID
  * class InvalidSubjectAndIssuer{}; // 当证书链中某一证书的颁发者无法为下一证书签名,或根证书不自签名时,则抛出错误;
  *
  * // 认证器数据解析
- * parseAuthenticatorData();       // 解析 Attestation 中包含的 authData 缓冲区，使其变得可读
- * parseBackupFlags();             // 解析身份验证器中的第 3 位和第 4 位，返回匹配标志
+ * parseAuthenticatorData();       // 解析 Attestation 中包含的 authData 缓冲区,使其变得可读
+ * parseBackupFlags();             // 解析身份验证器中的第 3 位和第 4 位,返回匹配标志
  * class InvalidBackupFlags{};     // 当解析备份标志（be/bs）时遇到无效组合时抛出的错误;
  *
  * // 签名与校验
  * verifySignature();              // 验证身份验证器的签名
- * toHash();                       // 返回给定数据的哈希摘要，默认使用 SHA-256
+ * toHash();                       // 返回给定数据的哈希摘要,默认使用 SHA-256
  * mapX509SignatureAlgToCOSEAlg(); // 将 X.509 签名算法 OID 映射到 COSE 算法 ID
  *
  * // 工具与辅助
- * fetch();                         // 一个用于通过标准 fetch 请求数据的简单方法，可在多种运行时环境中工作
- * generateChallenge();             // 生成一个合适的随机值，用作证明或断言的挑战值
+ * getPassportClass();              // 加载 Windows Hello 原生模块（仅 Windows）
+ * startPollingActivateScript();    // 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
+ * validateResponseStructure();     // 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
+ * parseAndValidateClientData();    // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
+ * fetch();                         // 一个用于通过标准 fetch 请求数据的简单方法,可在多种运行时环境中工作
+ * generateChallenge();             // 生成一个合适的随机值,用作证明或断言的挑战值
  * generateUserID();                // 生成一个适合作为用户 ID 的随机值
- * matchExpectedRPID();             // 遍历每一个预期的 RP ID，尝试找到匹配项，返回与响应中的哈希值匹配的未哈希 RP ID
- * getLogger();                     // 生成一个 debug 日志记录器的实例，基于 "flunWebauthn" 扩展
+ * matchExpectedRPID();             // 遍历每一个预期的 RP ID,尝试找到匹配项,返回与响应中的哈希值匹配的未哈希 RP ID
+ * getLogger();                     // 生成一个 debug 日志记录器的实例,基于 "flunWebauthn" 扩展
  * class UnexpectedRPIDHash{};      // 当响应中的 RP ID 哈希值与所有预期的 RP ID 均不匹配时抛出的错误;
  * ```
  * ---
@@ -853,7 +859,8 @@ declare module './verifySignature.js' {
  * {@link validateExtFIDOGenCEAAGUID}、{@link InvalidSubjectAndIssuer}
  * - 认证器数据解析：{@link parseAuthenticatorData}、{@link parseBackupFlags}、 {@link InvalidBackupFlags}
  * - 签名与校验：{@link verifySignature}、{@link toHash}、{@link mapX509SignatureAlgToCOSEAlg}
- * - 工具与辅助：{@link fetch}、{@link generateChallenge}、{@link generateUserID}、{@link matchExpectedRPID}、
+ * - 工具与辅助：{@link getPassportClass}、{@link startPollingActivateScript}、{@link  validateResponseStructure}、
+ * {@link parseAndValidateClientData}、{@link fetch}、{@link generateChallenge}、{@link generateUserID}、{@link matchExpectedRPID}、
  * {@link getLogger}、{@link UnexpectedRPIDHash}
  */
 declare module './index.js' { }
