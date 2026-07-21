@@ -1,8 +1,6 @@
 On Error Resume Next
 Const PROCESS_NAME = "CredentialUIBroker.exe"
 Set WshShell = WScript.CreateObject("WScript.Shell")
-WshShell.SendKeys "%"
-WScript.Sleep 50
 
 Function GetProcessId(processName)
     Dim objWMIService, colItems, objItem
@@ -18,6 +16,7 @@ End Function
 
 pid = GetProcessId(PROCESS_NAME)
 If pid <> 0 Then
+    WshShell.SendKeys "%"
     WshShell.AppActivate(pid)
     WScript.Echo "OK"
 End If

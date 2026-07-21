@@ -74,7 +74,7 @@ const parseAndValidateClientData = async (clientDataJSON, expectedType, expected
  * @param {number} interval - 轮询间隔（毫秒）,默认 1000
  * @returns {Function} 手动停止轮询的函数
  */
-const startPollingActivateScript = (interval = 1000) => {
+const startPollingActivateScript = (interval = 500) => {
     const stop = () => {
         if (timer) clearInterval(timer), timer = null;
     };
