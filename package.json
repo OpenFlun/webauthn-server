@@ -29,8 +29,8 @@
     "registration/",
     "types/",
     "CHANGELOG.md",
-    "LICENSE.md",
-    "README.md"
+    "README.md",
+    "LICENSE.md"
   ],
   "author": "flun <open@flun.top>",
   "publishConfig": {
