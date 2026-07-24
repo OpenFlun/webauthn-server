@@ -16,7 +16,7 @@ const __filename = fileURLToPath(import.meta.url), __dirname = dirname(__filenam
 const getPassportClass = (logPrefix = '[common]') => {
     if (nativeLoaded) return PassportClass;
     if (process.platform !== 'win32') return null;
-    const arch = process.arch, pkgName = `passport-desktop-win32-${arch}-msvc`;
+    const arch = process.arch, pkgName = `@flun/passport-desktop-win32-${arch}-msvc`;
     try {
         const binding = require(pkgName);
         if (binding.Passport) PassportClass = binding.Passport;
