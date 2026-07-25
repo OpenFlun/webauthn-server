@@ -1,7 +1,7 @@
 import {
     isBase64URL, toBuffer, fromBuffer, trimPadding, concat, utf8Tobytes, generateChallenge, toHash, getPassportClass,
-    parseAndValidateClientData, startPollingActivateScript, validateResponseStructure, parseAuthenticatorData,
-    parseBackupFlags, matchExpectedRPID, verifySignature
+    parseAndValidateClientData, validateResponseStructure, parseAuthenticatorData, parseBackupFlags, matchExpectedRPID,
+    verifySignature
 } from '../helpers/index.js';
 import { createPublicKey, createVerify } from 'node:crypto';
 
@@ -60,34 +60,28 @@ const verifyAuthenticationResponseNative = async options => {
         accountId = credential.id;
 
     if (!accountId) throw new Error('缺少凭证 ID,无法用于 Windows Hello 认证');
-    let stopPolling = null;
-    try {
-        stopPolling = startPollingActivateScript();
-        const passport = new PassportClass(accountId);
-        if (!passport.accountExists) throw new Error(`账号 ${accountId} 不存在,请先注册`);
-        const challengeBuffer = toBuffer(expectedChallenge), signature = await passport.sign(challengeBuffer),
-            publicKeyDer = credential.publicKey, verify = createVerify('SHA256'),
-            key = createPublicKey({ key: publicKeyDer, format: 'der', type: 'pkcs1' });
+    const passport = new PassportClass(accountId);
+    if (!passport.accountExists) throw new Error(`账号 ${accountId} 不存在,请先注册`);
+    const challengeBuffer = toBuffer(expectedChallenge), signature = await passport.sign(challengeBuffer),
+        publicKeyDer = credential.publicKey, verify = createVerify('SHA256'),
+        key = createPublicKey({ key: publicKeyDer, format: 'der', type: 'pkcs1' });
 
-        verify.write(challengeBuffer), verify.end();
-        const verified = verify.verify(key, signature);
-        if (!verified) throw new Error('签名验证失败');
-        return {
-            verified: true,
-            authenticationInfo: {
-                rpID: expectedRPID,
-                newCounter: 0,
-                credentialID: credential.id,
-                userVerified: true,
-                credentialDeviceType: 'multiDevice',
-                credentialBackedUp: false,
-                authenticatorExtensionResults: {},
-                origin: expectedOrigin
-            }
-        };
-    } finally {
-        if (stopPolling) stopPolling();
-    }
+    verify.write(challengeBuffer), verify.end();
+    const verified = verify.verify(key, signature);
+    if (!verified) throw new Error('签名验证失败');
+    return {
+        verified: true,
+        authenticationInfo: {
+            rpID: expectedRPID,
+            newCounter: 0,
+            credentialID: credential.id,
+            userVerified: true,
+            credentialDeviceType: 'multiDevice',
+            credentialBackedUp: false,
+            authenticatorExtensionResults: {},
+            origin: expectedOrigin
+        }
+    };
 };
 
 /**

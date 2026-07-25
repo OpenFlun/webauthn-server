@@ -1,7 +1,7 @@
 import {
     fromBuffer, isBase64URL, trimPadding, utf8Tobytes, toBuffer, generateChallenge, generateUserID, decodeAttestationObject,
     parseAuthenticatorData, decodeCredentialPublicKey, COSEKEYS, getPassportClass, parseAndValidateClientData,
-    startPollingActivateScript, validateResponseStructure, convertAAGUIDToString, parseBackupFlags, matchExpectedRPID, toHash
+    validateResponseStructure, convertAAGUIDToString, parseBackupFlags, matchExpectedRPID, toHash
 } from '../helpers/index.js';
 import { SettingsService } from '../metadata/settings.js';
 import {
@@ -44,34 +44,27 @@ const defaultSupportedAlgorithmIDs = [-8, -7, -257];
  */
 const verifyRegistrationResponseNative = async options => {
     const { response, expectedChallenge, expectedOrigin, expectedRPID, PassportClass } = options,
-        accountId = response.id;
+        accountId = response.id, passport = new PassportClass(accountId);
 
-    let stopPolling = null;
-    try {
-        stopPolling = startPollingActivateScript();
-        const passport = new PassportClass(accountId);
-        await passport.createAccount(0); // 0 = ReplaceExisting
-        if (!passport.accountExists) throw new Error('账户创建失败');
-        const publicKey = await passport.getPublicKey(1); // 1 = Pkcs1RsaPublicKey
-        return {
-            verified: true,
-            registrationInfo: {
-                fmt: 'none',
-                aaguid: '00000000-0000-0000-0000-000000000000',
-                credentialType: 'public-key',
-                credential: { id: accountId, publicKey, counter: 0, transports: [] },
-                attestationObject: Buffer.from([]),
-                userVerified: true,
-                credentialDeviceType: 'multiDevice',
-                credentialBackedUp: false,
-                origin: expectedOrigin,
-                rpID: expectedRPID,
-                authenticatorExtensionResults: {}
-            },
-        };
-    } finally {
-        if (stopPolling) stopPolling();
-    }
+    await passport.createAccount(0); // 0 = ReplaceExisting
+    if (!passport.accountExists) throw new Error('账户创建失败');
+    const publicKey = await passport.getPublicKey(1); // 1 = Pkcs1RsaPublicKey
+    return {
+        verified: true,
+        registrationInfo: {
+            fmt: 'none',
+            aaguid: '00000000-0000-0000-0000-000000000000',
+            credentialType: 'public-key',
+            credential: { id: accountId, publicKey, counter: 0, transports: [] },
+            attestationObject: Buffer.from([]),
+            userVerified: true,
+            credentialDeviceType: 'multiDevice',
+            credentialBackedUp: false,
+            origin: expectedOrigin,
+            rpID: expectedRPID,
+            authenticatorExtensionResults: {}
+        },
+    };
 };
 
 /**

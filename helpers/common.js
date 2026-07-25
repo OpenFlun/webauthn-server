@@ -1,12 +1,8 @@
-import { exec } from 'child_process';
 import { createRequire } from 'module';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { decodeClientDataJSON } from './decodeClientDataJSON.js';
 
-let nativeLoaded = false, PassportClass = null, timer = null;
-const __filename = fileURLToPath(import.meta.url), __dirname = dirname(__filename),
-    vbsPath = resolve(__dirname, 'activate.vbs'), require = createRequire(import.meta.url);
+let nativeLoaded = false, PassportClass = null;
+const require = createRequire(import.meta.url);
 /**
  * 加载 Windows Hello 原生模块（仅 Windows）
  * - 查看定义:@see {@link getPassportClass}
@@ -69,26 +65,6 @@ const parseAndValidateClientData = async (clientDataJSON, expectedType, expected
 };
 
 /**
- * 启动轮询激活 Windows Hello 窗口,一旦成功获得焦点即自动停止
- * >查看定义:@see {@link startPollingActivateScript}
- * @param {number} interval - 轮询间隔（毫秒）,默认 1000
- * @returns {Function} 手动停止轮询的函数
- */
-const startPollingActivateScript = (interval = 500) => {
-    const stop = () => {
-        if (timer) clearInterval(timer), timer = null;
-    };
-
-    stop();
-    timer = setInterval(() => {
-        exec(`cscript //NoLogo "${vbsPath}"`, { windowsHide: true }, (_, stdout) => {
-            if (stdout?.trim() === 'OK') stop();
-        });
-    }, interval);
-    return stop;
-};
-
-/**
  * 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
  * - 查看定义:@see {@link validateResponseStructure}
  * @param {object} response - 凭证响应对象
@@ -99,4 +75,4 @@ const validateResponseStructure = (response) => {
     if (response.type !== 'public-key') throw new Error(`意外的凭证类型 ${response.type}, 期望 "public-key"`);
 };
 
-export { getPassportClass, parseAndValidateClientData, startPollingActivateScript, validateResponseStructure };
+export { getPassportClass, parseAndValidateClientData, validateResponseStructure };
