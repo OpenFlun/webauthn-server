@@ -1,5 +1,6 @@
 import {
-    fromBuffer, isBase64URL, trimPadding, utf8Tobytes, toBuffer, generateChallenge, generateUserID, decodeAttestationObject,
+    fromBuffer, isBase64URL, trimPadding, utf8Tobytes, toBuffer, generateChallenge, generateUserID,
+    decodeAttestationObject,
     parseAuthenticatorData, decodeCredentialPublicKey, COSEKEYS, getPassportClass, parseAndValidateClientData,
     validateResponseStructure, convertAAGUIDToString, parseBackupFlags, matchExpectedRPID, toHash
 } from '../helpers/index.js';
@@ -10,7 +11,7 @@ import {
 } from './verifications/index.js';
 
 /**
- * 支持的加密算法标识符（COSE 算法 ID）
+ * 支持的加密算法标识符(COSE 算法 ID)
  * - 参考: https://w3c.github.io/webauthn/#sctn-alg-identifier
  * - 参考: https://www.iana.org/assignments/cose/cose.xhtml#algorithms
  * @type {number[]}
@@ -18,24 +19,24 @@ import {
 const supportedCOSEAlgorithmIdentifiers = [-8, -7, -36, -37, -38, -39, -257, -258, -259, -65535];
 
 /**
- * 默认的身份验证器选择标准（符合 WebAuthn L2 规范）
+ * 默认的身份验证器选择标准(符合 WebAuthn L2 规范)
  * @type {{ residentKey: ResidentKeyRequirement, userVerification: UserVerificationRequirement }}
  */
 const defaultAuthenticatorSelection = { residentKey: 'preferred', userVerification: 'preferred' };
 
 /**
- * 默认推荐的算法 ID 列表（优先使用 EdDSA, ES256, RS256）
+ * 默认推荐的算法 ID 列表(优先使用 EdDSA, ES256, RS256)
  * @type {number[]}
  */
 const defaultSupportedAlgorithmIDs = [-8, -7, -257];
 
 /**
- * 使用 Windows Hello（Passport）进行原生注册,会直接在本地创建账户并获取公钥；
- * 仅在 Windows 环境且 `response.native === true` 时被调用；
+ * 使用 Windows Hello(Passport)进行原生注册,会直接在本地创建账户并获取公钥;
+ * 仅在 Windows 环境且 `response.native === true` 时被调用;
  * @ignore
  * @param {Object} options - 内部参数
- * @param {Object} options.response - 浏览器返回的 Credential 对象（需包含 id）
- * @param {string|Buffer} options.expectedChallenge - 预期的挑战值（仅用于一致性检查）
+ * @param {Object} options.response - 浏览器返回的 Credential 对象(需包含 id)
+ * @param {string|Buffer} options.expectedChallenge - 预期的挑战值(仅用于一致性检查)
  * @param {string} options.expectedOrigin - 预期的来源
  * @param {string} options.expectedRPID - 预期的 RP ID
  * @param {Function} options.PassportClass - 由 `getPassportClass` 返回的 Passport 类构造函数
@@ -72,9 +73,9 @@ const verifyRegistrationResponseNative = async options => {
  * - 查看定义: @see {@link generateRegistrationOptions}
  *
  * @param {Object} options - 配置选项
- * @param {string} options.rpName - 用户可见的、“友好”的网站/服务名称
- * @param {string} options.rpID - 有效的域名（`https://` 之后的部分）
- * @param {string} options.userName - 用户在此网站上的用户名（邮箱等）
+ * @param {string} options.rpName - 用户可见的、"友好"的网站/服务名称
+ * @param {string} options.rpID - 有效的域名(`https://` 之后的部分)
+ * @param {string} options.userName - 用户在此网站上的用户名(邮箱等)
  * @param {BufferSource} [options.userID] - 用户唯一标识符,默认生成随机值
  * @param {BufferSource | string} [options.challenge] - 随机挑战值,默认生成
  * @param {string} [options.userDisplayName] - 用户的显示名称,默认为 ""
@@ -133,7 +134,7 @@ const generateRegistrationOptions = async options => {
         timeout,
         attestation: attestationType,
         excludeCredentials: excludeCredentials.map((cred) => {
-            if (!isBase64URL(cred.id)) throw new Error(`excludeCredential 的 id “${cred.id}” 不是合法的 base64url 字符串`);
+            if (!isBase64URL(cred.id)) throw new Error(`excludeCredential 的 id "${cred.id}" 不是合法的 base64url 字符串`);
             return { ...cred, id: trimPadding(cred.id), type: 'public-key' };
         }),
         authenticatorSelection,
@@ -142,7 +143,7 @@ const generateRegistrationOptions = async options => {
 };
 
 /**
- * 验证用户是否合法完成了 WebAuthn 注册流程；
+ * 验证用户是否合法完成了 WebAuthn 注册流程;
  * - 查看定义: @see {@link verifyRegistrationResponse}
  *
  * @param {Object} options - 验证选项
@@ -156,8 +157,8 @@ const generateRegistrationOptions = async options => {
  * @param {string[]} [options.response.response.transports] - 支持的传输方式列表
  * @param {boolean} [options.response.native] - 标记是否使用 Windows Hello 原生注册,默认为 false
  * @param {string|string[]|function} options.expectedChallenge - 预期的 challenge 值或自定义验证函数
- * @param {string|string[]} options.expectedOrigin - 期望的网站 URL（或 URL 数组）
- * @param {string|string[]} options.expectedRPID - 期望的 RP ID（或 ID 数组）
+ * @param {string|string[]} options.expectedOrigin - 期望的网站 URL(或 URL 数组)
+ * @param {string|string[]} options.expectedRPID - 期望的 RP ID(或 ID 数组)
  * @param {string|string[]} [options.expectedType] - 期望的响应类型,默认为 'webauthn.create'
  * @param {boolean} [options.requireUserPresence] - 强制要求用户存在,默认为 true
  * @param {boolean} [options.requireUserVerification] - 强制要求用户验证,默认为 true
@@ -222,7 +223,7 @@ const verifyRegistrationResponse = async options => {
     if (typeof alg !== 'number') throw new Error('凭证公钥缺少数值类型的 alg');
     if (!supportedAlgorithmIDs.includes(alg)) {
         const supported = supportedAlgorithmIDs.join(', ');
-        throw new Error(`意外的公钥 alg "${alg}",期望为以下之一："${supported}"`);
+        throw new Error(`意外的公钥 alg "${alg}",期望为以下之一:"${supported}"`);
     }
     const clientDataHash = await toHash(toBuffer(attestationResponse.clientDataJSON)),
         rootCertificates = SettingsService.getRootCertificates({ identifier: fmt }),
@@ -241,7 +242,7 @@ const verifyRegistrationResponse = async options => {
         if (attStmt.size > 0) throw new Error('None 证明存在意外的证明语句');
         verified = true;
     }
-    else throw new Error(`不支持的证明格式：${fmt}`);
+    else throw new Error(`不支持的证明格式:${fmt}`);
     if (!verified) return { verified: false };
 
     const { credentialDeviceType, credentialBackedUp } = parseBackupFlags(flags);

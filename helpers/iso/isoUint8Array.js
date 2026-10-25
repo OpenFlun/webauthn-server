@@ -2,7 +2,7 @@
  * 将十六进制字符串转换为 Uint8Array;
  * - 查看定义:@see {@link fromHex}
  * 替代 `Buffer.from('...', 'hex')`
- * @param {string} hex - 十六进制字符串（可包含大小写字母，长度必须为偶数）
+ * @param {string} hex - 十六进制字符串(可包含大小写字母,长度必须为偶数)
  * @returns {Uint8Array} 转换后的字节数组
  */
 const fromHex = hex => {
@@ -40,7 +40,7 @@ const asciiToBytes = value => {
  * 将 Uint8Array 转换为十六进制字符串,替代 `Buffer.toString('hex')`;
  * - 查看定义:@see {@link toHex}
  * @param {Uint8Array} array - 要转换的字节数组
- * @returns {string} 十六进制字符串（小写）
+ * @returns {string} 十六进制字符串(小写)
  */
 const toHex = array => {
     const hexParts = Array.from(array, (i) => i.toString(16).padStart(2, '0'));
@@ -48,7 +48,7 @@ const toHex = array => {
 };
 
 /**
- * 创建一个 DataView，以便在解析 Uint8Array 的字节时可以灵活切分
+ * 创建一个 DataView,以便在解析 Uint8Array 的字节时可以灵活切分
  * - 查看定义:@see {@link toDataView}
  * @param {Uint8Array} array - 原始字节数组
  * @returns {DataView} 基于该数组的 DataView 视图

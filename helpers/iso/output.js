@@ -8,10 +8,10 @@ import { verifyOKP } from './verifyOKP.js';
 
 // ================================= digest函数 =================================
 /**
- * 生成所提供数据的摘要（哈希值）
+ * 生成所提供数据的摘要(哈希值)
  * - 查看定义:@see {@link digest}
  * @param {BufferSource} data - 要生成摘要的数据
- * @param {number} algorithm - COSE 算法 ID，该 ID 映射到所需的 SHA 算法
+ * @param {number} algorithm - COSE 算法 ID,该 ID 映射到所需的 SHA 算法
  * @returns {Promise<Uint8Array>} 包含摘要字节的 Uint8Array
  */
 const digest = async (data, algorithm) => {
@@ -26,8 +26,8 @@ const digest = async (data, algorithm) => {
  * - 查看定义:@see {@link getRandomValues}
  *
  * @template T
- * @param {T} array - 要填充随机值的类型化数组（如 Uint8Array）
- * @returns {Promise<T>} 返回传入的同一个字节数组（已填充随机值）
+ * @param {T} array - 要填充随机值的类型化数组(如 Uint8Array)
+ * @returns {Promise<T>} 返回传入的同一个字节数组(已填充随机值)
  */
 const getRandomValues = async array => {
     const WebCrypto = await getWebCrypto();
@@ -37,14 +37,14 @@ const getRandomValues = async array => {
 
 // ================================= getRandomValues函数 =================================
 /**
- * 使用 COSE 格式公钥验证签名，支持 EC2、RSA 和 OKP 密钥类型
+ * 使用 COSE 格式公钥验证签名,支持 EC2、RSA 和 OKP 密钥类型
  * - 查看定义:@see {@link verify}
  * @param {Object} opts - 验证选项
- * @param {Map<number, number | BufferSource>} opts.cosePublicKey - COSE 格式的公钥（包含必要的密钥参数）
- * @param {BufferSource} opts.signature - 待验证的签名（原始 ASN.1 或 COSE 格式）
+ * @param {Map<number, number | BufferSource>} opts.cosePublicKey - COSE 格式的公钥(包含必要的密钥参数)
+ * @param {BufferSource} opts.signature - 待验证的签名(原始 ASN.1 或 COSE 格式)
  * @param {BufferSource} opts.data - 已签名的原始数据
- * @param {string} [opts.shaHashOverride] - 可选，覆盖默认的哈希算法（如 'SHA-256'）
- * @returns {Promise<boolean>} 验证通过返回 true，否则 false
+ * @param {string} [opts.shaHashOverride] - 可选,覆盖默认的哈希算法(如 'SHA-256')
+ * @returns {Promise<boolean>} 验证通过返回 true,否则 false
  * @throws {Error} 当公钥类型不支持、曲线未知或签名格式无效时抛出错误
  */
 const verify = opts => {

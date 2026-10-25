@@ -8,7 +8,7 @@
 const COSEKEYS = {
     kty: 1, 1: 'kty', alg: 3, 3: 'alg', crv: -1, '-1': 'crv',
     x: -2, '-2': 'x', y: -3, '-3': 'y',
-    n: -1, '-1': 'n', // 注意：与 crv 共用 -1，这是 COSE 规范的设计
+    n: -1, '-1': 'n', // 注意:与 crv 共用 -1,这是 COSE 规范的设计
     e: -2, '-2': 'e'
 };
 /**
@@ -46,7 +46,7 @@ const COSEALG = {
 };
 
 /**
- * 判断给定的 COSE 公钥是否为 OKP 密钥对（类型守卫）
+ * 判断给定的 COSE 公钥是否为 OKP 密钥对(类型守卫)
  * - 查看定义:@see {@link isCOSEPublicKeyOKP}
  * @param {Map<number, number>} cosePublicKey - 解码后的 COSE 公钥映射
  * @returns {boolean} 如果是 OKP 密钥则返回 true
@@ -57,7 +57,7 @@ const isCOSEPublicKeyOKP = cosePublicKey => {
 };
 
 /**
- * 判断给定的 COSE 公钥是否为 EC2 密钥对（类型守卫）
+ * 判断给定的 COSE 公钥是否为 EC2 密钥对(类型守卫)
  * - 查看定义:@see {@link isCOSEPublicKeyEC2}
  * @param {Map<number, number>} cosePublicKey - 解码后的 COSE 公钥映射
  * @returns {boolean} 如果是 EC2 密钥则返回 true
@@ -68,7 +68,7 @@ const isCOSEPublicKeyEC2 = cosePublicKey => {
 };
 
 /**
- * 判断给定的 COSE 公钥是否为 RSA 密钥对（类型守卫）
+ * 判断给定的 COSE 公钥是否为 RSA 密钥对(类型守卫)
  * - 查看定义:@see {@link isCOSEPublicKeyRSA}
  * @param {Map<number, number>} cosePublicKey - 解码后的 COSE 公钥映射
  * @returns {boolean} 如果是 RSA 密钥则返回 true
@@ -78,7 +78,7 @@ const isCOSEPublicKeyRSA = cosePublicKey => {
     return isCOSEKty(kty) && kty === COSEKTY.RSA;
 };
 /**
- * 检查给定值是否为有效的 COSE 密钥类型（kty）
+ * 检查给定值是否为有效的 COSE 密钥类型(kty)
  * - 查看定义:@see {@link isCOSEKty}
  * @param {number} kty - 待检查的密钥类型值
  * @returns {boolean} 若为有效 COSE 密钥类型则返回 true
@@ -87,7 +87,7 @@ const isCOSEKty = kty => {
     return Object.values(COSEKTY).indexOf(kty) >= 0;
 };
 /**
- * 检查给定值是否为有效的 COSE 曲线（crv）
+ * 检查给定值是否为有效的 COSE 曲线(crv)
  * - 查看定义:@see {@link isCOSECrv}
  * @param {number} crv - 待检查的曲线值
  * @returns {boolean} 若为有效 COSE 曲线则返回 true
@@ -97,7 +97,7 @@ const isCOSECrv = crv => {
 };
 
 /**
- * 检查给定值是否为有效的 COSE 算法（alg）
+ * 检查给定值是否为有效的 COSE 算法(alg)
  * - 查看定义:@see {@link isCOSEAlg}
  * @param {number} alg - 待检查的算法值
  * @returns {boolean} 若为有效 COSE 算法则返回 true

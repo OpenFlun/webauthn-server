@@ -1,7 +1,7 @@
 {
   "name": "@flun/webauthn-server",
   "version": "2.1.9",
-  "description": "这是一个专为 Node.js 环境设计的 WebAuthn（含 Passkeys）服务端工具库,提供简洁的 TypeScript 实现,并内置对证书、密钥及 CBOR 编码的完整处理能力,适用于构建 FIDO2/Passkey 身份验证后端",
+  "description": "Node.js 端 WebAuthn/Passkey 服务端库;提供 TypeScript 实现与证书、密钥、CBOR 编码处理;",
   "keywords": [
     "typescript",
     "webauthn",
@@ -40,7 +40,7 @@
     "type": "git",
     "url": "git+https://github.com/OpenFlun/webauthn-server.git"
   },
-  "homepage": "https://www.npmjs.com/package/@flun/webauthn-server#readme",
+  "homepage": "https://github.com/OpenFlun/webauthn-server#readme",
   "bugs": {
     "url": "https://github.com/OpenFlun/webauthn-server/issues"
   },
@@ -48,12 +48,12 @@
   "dependencies": {
     "@hexagon/base64": "^2.0.4",
     "@levischuck/tiny-cbor": "^0.3.6",
-    "@peculiar/asn1-android": "^2.10.0",
-    "@peculiar/asn1-ecc": "^2.10.0",
-    "@peculiar/asn1-rsa": "^2.10.0",
-    "@peculiar/asn1-schema": "^2.10.0",
-    "@peculiar/asn1-x509": "^2.10.0",
-    "@peculiar/x509": "^2.1.0",
+    "@peculiar/asn1-android": "^2.11.0",
+    "@peculiar/asn1-ecc": "^2.11.0",
+    "@peculiar/asn1-rsa": "^2.11.0",
+    "@peculiar/asn1-schema": "^2.11.0",
+    "@peculiar/asn1-x509": "^2.11.0",
+    "@peculiar/x509": "^2.2.0",
     "reflect-metadata": "^0.2.2"
   },
   "engines": {
@@ -61,10 +61,10 @@
     "npm": ">=10.0.0"
   },
   "devDependencies": {
-    "@types/node": "^26.6.3"
+    "@types/node": "^26.6.5"
   },
   "optionalDependencies": {
-    "@flun/passport-desktop-win32-x64-msvc": "1.0.7",
-    "@flun/passport-desktop-win32-ia32-msvc": "1.0.7"
+    "@flun/passport-desktop-win32-x64-msvc": "1.0.8",
+    "@flun/passport-desktop-win32-ia32-msvc": "1.0.8"
   }
 }

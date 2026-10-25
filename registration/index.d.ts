@@ -1,4 +1,6 @@
-import { TPM_ST, TPM_ALG, TPM_ECC_CURVE, TPM_MANUFACTURERS, TPM_ECC_CURVE_COSE_CRV_MAP } from './verifications/tpm/constants.js';
+import {
+    TPM_ST, TPM_ALG, TPM_ECC_CURVE, TPM_MANUFACTURERS, TPM_ECC_CURVE_COSE_CRV_MAP
+} from './verifications/tpm/constants.js';
 import { parseCertInfo, parsePubArea } from './verifications/tpm/parse.js';
 import { verifyAttestationAndroidKey } from './verifications/verifyAttestationAndroidKey.js';
 import { verifyAttestationAndroidSafetyNet } from './verifications/verifyAttestationAndroidSafetyNet.js';
@@ -96,7 +98,7 @@ declare module './verifications/verifyAttestationApple.js' {
 /**
  * ```js
  * // 文件导出内容
- * verifyAttestationFIDOU2F(); // 使用 'fido-u2f' 格式验证认证（Attestation）响应
+ * verifyAttestationFIDOU2F(); // 使用 'fido-u2f' 格式验证认证(Attestation)响应
  * ```
  * >查看定义:@see {@link verifyAttestationFIDOU2F}
  */
@@ -135,7 +137,7 @@ declare module './verifications/verifyAttestationTPM.js' {
  * verifyAttestationAndroidKey();       // 验证格式为 'android-key' 的 attestation 响应
  * verifyAttestationAndroidSafetyNet(); // 验证格式为 'android-safetynet' 的证明响应
  * verifyAttestationApple();            // 验证 Apple 类型的证明响应
- * verifyAttestationFIDOU2F();          // 使用 'fido-u2f' 格式验证认证（Attestation）响应
+ * verifyAttestationFIDOU2F();          // 使用 'fido-u2f' 格式验证认证(Attestation)响应
  * verifyAttestationPacked();           // 验证格式为 'packed' 的 attestation 响应
  * verifyAttestationTPM(); // 验证TPM认证器返回的attestation陈述,确保其符合 FIDO2 规范
  * ```
@@ -155,13 +157,14 @@ declare module './verifications/index.js' {
 // ================================= 整体导出入口 =================================
 /**
  *
- * 验证器注册处理模块函数：
+ * 验证器注册处理模块函数:
  * ```js
  * generateRegistrationOptions();              // 生成用于身份验证器注册的参数
  * verifyRegistrationResponse();               // 验证用户是否合法地完成了注册流程
  * const supportedCOSEAlgorithmIdentifiers=[]; // 支持的加密算法标识符
  * ```
- * >查看定义:@see {@link supportedCOSEAlgorithmIdentifiers}、{@link generateRegistrationOptions}、{@link verifyRegistrationResponse}
+ * >查看定义:@see {@link supportedCOSEAlgorithmIdentifiers}、{@link generateRegistrationOptions}、
+ * {@link verifyRegistrationResponse}
  */
 declare module './index.js' {
     export * from './registration.js';

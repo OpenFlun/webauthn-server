@@ -6,11 +6,11 @@ import { COSECRV, COSEKEYS, COSEKTY } from './cose.js';
 import { mapX509SignatureAlgToCOSEAlg } from './mapX509SignatureAlgToCOSEAlg.js';
 
 /**
- * 从 X.509 证书（DER 格式）中提取公钥，并将其转换为 COSE 公钥结构
+ * 从 X.509 证书(DER 格式)中提取公钥,并将其转换为 COSE 公钥结构
  *
  * @param {BufferSource} x509Certificate - DER 编码的 X.509 证书缓冲区
- * @returns {Map<number, number | Uint8Array>} 解析出的 COSE 公钥 Map 对象，可根据密钥类型（OKP/EC2/RSA）使用类型守卫进行细化
- * @throws 若证书格式无效或公钥类型不受支持，将抛出错误
+ * @returns {Map<number, number | Uint8Array>} 解析出的 COSE 公钥 Map 对象,可根据密钥类型(OKP/EC2/RSA)使用类型守卫进行细化
+ * @throws 若证书格式无效或公钥类型不受支持,将抛出错误
  * - 查看定义:@see {@link convertX509PublicKeyToCOSE}
  * - {@link https://datatracker.ietf.org/doc/html/rfc9052#name-cose-key-map|COSE Key Map Specification}
  */
@@ -26,7 +26,7 @@ const convertX509PublicKeyToCOSE = x509Certificate => {
         publicKeyAlgorithmID = subjectPublicKeyInfo.algorithm.algorithm;
 
     if (publicKeyAlgorithmID === id_ecPublicKey) {
-        if (!subjectPublicKeyInfo.algorithm.parameters) throw new Error('证书公钥缺少参数（EC2）');
+        if (!subjectPublicKeyInfo.algorithm.parameters) throw new Error('证书公钥缺少参数(EC2)');
 
         const ecParameters = AsnParser.parse(new Uint8Array(subjectPublicKeyInfo.algorithm.parameters), ECParameters),
             { namedCurve } = ecParameters;
@@ -40,13 +40,13 @@ const convertX509PublicKeyToCOSE = x509Certificate => {
         let x, y;
 
         if (subjectPublicKey[0] === 0x04) {
-            // 公钥采用“未压缩格式”,将剩余字节平分为两半
+            // 公钥采用"未压缩格式",将剩余字节平分为两半
             let pointer = 1;
             const halfLength = (subjectPublicKey.length - 1) / 2;
             x = subjectPublicKey.slice(pointer, pointer += halfLength);
             y = subjectPublicKey.slice(pointer);
         }
-        else throw new Error('暂未支持“压缩格式”公钥的处理');
+        else throw new Error('暂未支持"压缩格式"公钥的处理');
 
         const coseEC2PubKey = new Map();
         coseEC2PubKey.set(COSEKEYS.kty, COSEKTY.EC2);
@@ -60,7 +60,8 @@ const convertX509PublicKeyToCOSE = x509Certificate => {
         /**
          * RSA 公钥
          */
-        const rsaPublicKey = AsnParser.parse(subjectPublicKeyInfo.subjectPublicKey, RSAPublicKey), coseRSAPubKey = new Map();
+        const rsaPublicKey = AsnParser.parse(subjectPublicKeyInfo.subjectPublicKey, RSAPublicKey),
+            coseRSAPubKey = new Map();
 
         coseRSAPubKey.set(COSEKEYS.kty, COSEKTY.RSA);
         coseRSAPubKey.set(COSEKEYS.alg, mapX509SignatureAlgToCOSEAlg(signatureAlgorithm));

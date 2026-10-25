@@ -10,10 +10,10 @@ import { concat, convertCOSEtoPKCS, convertCertBufferToPEM, COSEALG, toHex, vali
  * @param {BufferSource} options.clientDataHash - 客户端数据哈希
  * @param {BufferSource} options.rpIdHash - 依赖方 ID 哈希
  * @param {BufferSource} options.credentialID - 凭证 ID
- * @param {BufferSource} options.credentialPublicKey - 凭证公钥（COSE 编码）
+ * @param {BufferSource} options.credentialPublicKey - 凭证公钥(COSE 编码)
  * @param {BufferSource} options.aaguid - 认证器 AAGUID
- * @param {BufferSource[]} [options.rootCertificates] - 根证书列表（PEM 格式）
- * @returns {Promise<boolean>} 验证通过返回 true，否则抛出错误
+ * @param {BufferSource[]} [options.rootCertificates] - 根证书列表(PEM 格式)
+ * @returns {Promise<boolean>} 验证通过返回 true,否则抛出错误
  */
 const verifyAttestationFIDOU2F = async options => {
     const { attStmt, clientDataHash, rpIdHash, credentialID, credentialPublicKey, aaguid, rootCertificates } = options,

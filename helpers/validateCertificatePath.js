@@ -3,7 +3,7 @@ import { isCertRevoked } from './isCertRevoked.js';
 import { getWebCrypto } from './iso/getWebCrypto.js';
 
 /**
- * 当证书链中某一证书的颁发者无法为下一证书签名，或根证书不自签名时抛出的内部错误;
+ * 当证书链中某一证书的颁发者无法为下一证书签名,或根证书不自签名时抛出的内部错误;
  * - 查看定义:@see {@link InvalidSubjectAndIssuer}
  * @extends {Error}
  */
@@ -34,11 +34,11 @@ const assertCertIsWithinValidTimeWindow = (certNotBefore, certNotAfter) => {
 };
 
 /**
- * 遍历 PEM 证书数组，确保它们形成正确的证书链
+ * 遍历 PEM 证书数组,确保它们形成正确的证书链
  * - 查看定义:@see {@link validateCertificatePath}
  *
- * @param {string[]} x5cCertsPEM - 待验证的 X.509 证书链（PEM 格式）,通常是 `x5c.map(convertASN1toPEM)` 的结果
- * @param {string[]} [trustAnchorsPEM=[]] - 信任锚证书列表（PEM 格式）,用于验证 x5c 证书链的根信任
+ * @param {string[]} x5cCertsPEM - 待验证的 X.509 证书链(PEM 格式),通常是 `x5c.map(convertASN1toPEM)` 的结果
+ * @param {string[]} [trustAnchorsPEM=[]] - 信任锚证书列表(PEM 格式),用于验证 x5c 证书链的根信任
  * @returns {Promise<boolean>} 当证书路径验证成功时返回 true,否则抛出错误
  */
 const validateCertificatePath = async (x5cCertsPEM, trustAnchorsPEM = []) => {
@@ -92,13 +92,13 @@ const validateCertificatePath = async (x5cCertsPEM, trustAnchorsPEM = []) => {
         try {
             const x5cWithTrustAnchor = x5cCertsParsed.concat([anchor]);
             if (new Set(x5cWithTrustAnchor).size !== x5cWithTrustAnchor.length) {
-                throw new Error('无效的证书路径：发现重复证书');
+                throw new Error('无效的证书路径:发现重复证书');
             }
 
             // 检查签名及 notBefore / notAfter
             for (let i = 0; i < x5cWithTrustAnchor.length - 1; i++) {
                 const subject = x5cWithTrustAnchor[i], issuer = x5cWithTrustAnchor[i + 1],
-                    // 叶证书或中间证书：确保链中的下一个证书为其签名
+                    // 叶证书或中间证书:确保链中的下一个证书为其签名
                     issuerSignedSubject = await subject.verify(
                         { publicKey: issuer.publicKey, signatureOnly: true }, WebCrypto);
 

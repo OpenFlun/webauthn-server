@@ -2,12 +2,12 @@
 /**
  * Google 硬件认证根证书 1
  * - 查看定义:@see {@link Google_Hardware_Attestation_Root_1}
- * - 下载自：https://developer.android.com/training/articles/security-key-attestation#root_certificate
- * （第一个条目）
+ * - 下载自:https://developer.android.com/training/articles/security-key-attestation#root_certificate
+ * (第一个条目)
  *
- * 有效期至：2026-05-24 @ 09:28 PST
+ * 有效期至:2026-05-24 @ 09:28 PST
  *
- * SHA256 指纹：
+ * SHA256 指纹:
  * C1:98:4A:3E:F4:5C:1E:2A:91:85:51:DE:10:60:3C:86:F7:05:1B:22:49:C4:89:1C:AE:32:30:EA:BD:0C:97:D5
  */
 const Google_Hardware_Attestation_Root_1 = `-----BEGIN CERTIFICATE-----
@@ -32,12 +32,12 @@ fhA4URSh77Yd6uuJOJENRaNVTzk
 /**
  * Google 硬件认证根证书 2
  * - 查看定义:@see {@link Google_Hardware_Attestation_Root_2}
- * - 下载自：https://developer.android.com/training/articles/security-key-attestation#root_certificate
- * （第二个条目）
+ * - 下载自:https://developer.android.com/training/articles/security-key-attestation#root_certificate
+ * (第二个条目)
  *
- * 有效期至：2034-11-18 @ 12:37 PST
+ * 有效期至:2034-11-18 @ 12:37 PST
  *
- * SHA256 指纹：
+ * SHA256 指纹:
  * 1E:F1:A0:4B:8B:A5:8A:B9:45:89:AC:49:8C:89:82:A7:83:F2:4E:A7:30:7E:01:59:A0:C3:A7:3B:37:7D:87:CC
  */
 const Google_Hardware_Attestation_Root_2 = `-----BEGIN CERTIFICATE-----
@@ -61,12 +61,12 @@ kuYbacK/xyZFiRcrPJPb41zgbQj9XAEyLKCHex0SdDrx+tWUDqG8At2JHA==
 /**
  * Google 硬件认证根证书 3
  * - 查看定义:@see {@link Google_Hardware_Attestation_Root_3}
- * - 下载自：https://developer.android.com/training/articles/security-key-attestation#root_certificate
- * （第三个条目）
+ * - 下载自:https://developer.android.com/training/articles/security-key-attestation#root_certificate
+ * (第三个条目)
  *
- * 有效期至：2036-11-13 @ 15:10 PST
+ * 有效期至:2036-11-13 @ 15:10 PST
  *
- * SHA256 指纹：
+ * SHA256 指纹:
  * AB:66:41:17:8A:36:E1:79:AA:0C:1C:DD:DF:9A:16:EB:45:FA:20:94:3E:2B:8C:D7:C7:C0:5C:26:CF:8B:48:7A
  */
 const Google_Hardware_Attestation_Root_3 = `-----BEGIN CERTIFICATE-----
@@ -90,12 +90,12 @@ NGDqVBrLr2+0DtWoiB1aDEjLWl9FmyIUyUm7mD/vFDkzF+wm7cyWpQpCVQ==
 /**
  * Google 硬件认证根证书 4
  * - 查看定义:@see {@link Google_Hardware_Attestation_Root_4}
- * - 下载自：https://developer.android.com/training/articles/security-key-attestation#root_certificate
- * （第四个条目）
+ * - 下载自:https://developer.android.com/training/articles/security-key-attestation#root_certificate
+ * (第四个条目)
  *
- * 有效期至：2042-03-15 @ 11:07 PDT
+ * 有效期至:2042-03-15 @ 11:07 PDT
  *
- * SHA256 指纹：
+ * SHA256 指纹:
  * CE:DB:1C:B6:DC:89:6A:E5:EC:79:73:48:BC:E9:28:67:53:C2:B3:8E:E7:1C:E0:FB:E3:4A:9A:12:48:80:0D:FC
  */
 const Google_Hardware_Attestation_Root_4 = `-----BEGIN CERTIFICATE-----
@@ -120,11 +120,11 @@ uOBBTzhIlMEZq9qkDWuM2cA5kW5V3FJUcfHnw1IdYIg2Wxg7yHcQZemFQg==
 /**
  * GlobalSign 根证书
  * - 查看定义:@see {@link GlobalSign_Root_CA}
- * - 下载地址：https://pki.goog/roots.pem
+ * - 下载地址:https://pki.goog/roots.pem
  *
- * 有效期至：2028-01-28 @ 04:00 PST（太平洋标准时间）
+ * 有效期至:2028-01-28 @ 04:00 PST(太平洋标准时间)
  *
- * SHA256 指纹：
+ * SHA256 指纹:
  * EB:D4:10:40:E4:BB:3E:C7:42:C9:E3:81:D3:1E:F2:A4:1A:48:B6:68:5C:96:E7:CE:F3:C1:DF:6C:D4:33:1C:99
  */
 const GlobalSign_Root_CA = `-----BEGIN CERTIFICATE-----
@@ -145,11 +145,11 @@ KqC5JlR3XC321Y9YeRq4VzW9v493kHMB65jUr9TU/Qr6cf9tveCX4XSQRjbgbMEHMUfpIBvFSDJ3gyIC
 /**
  * GlobalSign 根证书 CA - R3
  * - 查看定义:@see {@link GlobalSign_Root_CA_R3}
- * - 下载地址：https://valid.r3.roots.globalsign.com/
+ * - 下载地址:https://valid.r3.roots.globalsign.com/
  *
- * 有效期至：2029-03-18 @ 00:00 PST（太平洋标准时间）
+ * 有效期至:2029-03-18 @ 00:00 PST(太平洋标准时间)
  *
- * SHA256 指纹：
+ * SHA256 指纹:
  * CB:B5:22:D7:B7:F1:27:AD:6A:01:13:86:5B:DF:1C:D4:10:2E:7D:07:59:AF:63:5A:7C:F4:72:0D:C9:63:C5:3B
  */
 const GlobalSign_Root_CA_R3 = `-----BEGIN CERTIFICATE-----
@@ -172,9 +172,9 @@ kDOOyyGeMlhLxS67ttVb9+E7gUJTb0o2HLO0JQZR7rkpeDMdmztcpHWD9f
  * - 查看定义:@see {@link Apple_WebAuthn_Root_CA}
  * - 下载自 https://www.apple.com/certificateauthority/Apple_WebAuthn_Root_CA.pem
  *
- * 有效期至 2045 年 3 月 14 日 17:00（太平洋标准时间）
+ * 有效期至 2045 年 3 月 14 日 17:00(太平洋标准时间)
  *
- * SHA256 指纹：
+ * SHA256 指纹:
  * 09:15:DD:5C:07:A2:8D:B5:49:D1:F6:77:BB:5A:75:D4:BF:BE:95:61:A7:73:42:43:27:76:2E:9E:02:F9:BB:29
  */
 const Apple_WebAuthn_Root_CA = `-----BEGIN CERTIFICATE-----

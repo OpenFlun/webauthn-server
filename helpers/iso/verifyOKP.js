@@ -4,14 +4,14 @@ import { getWebCrypto } from './getWebCrypto.js';
 import { importKey } from './importKey.js';
 
 /**
- * 使用 OKP（Octet Key Pair，如 Ed25519）COSE 公钥验证签名
+ * 使用 OKP(Octet Key Pair,如 Ed25519)COSE 公钥验证签名
  *
  * - 查看定义:@see {@link verifyOKP}
  * @param {Object} opts - 验证选项
- * @param {Map<number, number | BufferSource>} opts.cosePublicKey - COSE 格式的 OKP 公钥，需包含 alg、crv、x 字段
- * @param {BufferSource} opts.signature - 待验证的签名（原始字节序列）
+ * @param {Map<number, number | BufferSource>} opts.cosePublicKey - COSE 格式的 OKP 公钥,需包含 alg、crv、x 字段
+ * @param {BufferSource} opts.signature - 待验证的签名(原始字节序列)
  * @param {BufferSource} opts.data - 原始签名数据
- * @returns {Promise<boolean>} 验证通过返回 true，否则 false
+ * @returns {Promise<boolean>} 验证通过返回 true,否则 false
  * @throws {Error} 当公钥缺少必要字段、算法无效或曲线不支持时抛出错误
  */
 const verifyOKP = async opts => {
@@ -23,7 +23,7 @@ const verifyOKP = async opts => {
     if (!crv) throw new Error('公钥缺少 crv 字段 (OKP)');
     if (!x) throw new Error('公钥缺少 x 字段 (OKP)');
 
-    // 密钥导入步骤参考：
+    // 密钥导入步骤参考:
     // https://wicg.github.io/webcrypto-secure-curves/#ed25519-operations
     let _crv;
     if (crv === COSECRV.ED25519) _crv = 'Ed25519';

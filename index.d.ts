@@ -1,5 +1,5 @@
 /**
- * WebAuthn认证模块 主要功能：
+ * WebAuthn认证模块 主要功能:
  * ```js
  * generateAuthenticationOptions();                // 生成用于身份验证器认证的参数
  * verifyAuthenticationResponse();                 // 验证用户是否合法完成了认证流程
@@ -14,11 +14,11 @@
  * ```
  * ---
  *
- * **完整前后端集成示例（开箱即用）**
+ * **完整前后端集成示例(开箱即用)**
  *
- * 以下示例包含前端 HTML/JS 代码和后端 Node.js (Express) 代码，使用 `@flun/webauthn-browser` 简化前端调用;
+ * 以下示例包含前端 HTML/JS 代码和后端 Node.js (Express) 代码,使用 `@flun/webauthn-browser` 简化前端调用;
  *
- * ### 后端代码（Node.js + Express）
+ * ### 后端代码(Node.js + Express)
  * ```js
  * import express from 'express';
  * import {
@@ -32,15 +32,15 @@
  * // 模拟用户数据库
  * const users = {
  *   'user@example.com': {
- *     id: Buffer.from('user-id-buffer'), // 用户唯一标识（Buffer 或 Uint8Array）
+ *     id: Buffer.from('user-id-buffer'), // 用户唯一标识(Buffer 或 Uint8Array)
  *     credentials: []
  *   }
  * };
  *
- * // 临时存储挑战值（生产环境建议使用 session 或 redis）
+ * // 临时存储挑战值(生产环境建议使用 session 或 redis)
  * const challengeStore = new Map();
  *
- * // 1. 注册：生成选项
+ * // 1. 注册:生成选项
  * app.post('/api/register/begin', async (req, res) => {
  *   const { username } = req.body;
  *   const user = users[username];
@@ -59,7 +59,7 @@
  *   res.json(options);
  * });
  *
- * // 2. 注册：验证响应
+ * // 2. 注册:验证响应
  * app.post('/api/register/complete', async (req, res) => {
  *   const { username, response } = req.body;
  *   const expectedChallenge = challengeStore.get(username + '_reg');
@@ -87,7 +87,7 @@
  *   }
  * });
  *
- * // 3. 认证：生成选项
+ * // 3. 认证:生成选项
  * app.post('/api/login/begin', async (req, res) => {
  *   const { username } = req.body;
  *   const user = users[username];
@@ -106,7 +106,7 @@
  *   res.json(options);
  * });
  *
- * // 4. 认证：验证响应
+ * // 4. 认证:验证响应
  * app.post('/api/login/complete', async (req, res) => {
  *   const { username, response } = req.body;
  *   const expectedChallenge = challengeStore.get(username + '_auth');
@@ -134,8 +134,9 @@
  * app.listen(3001, () => console.log('Backend running on port 3001'));
  * ```
  *
- * ### 前端代码（HTML + JavaScript）
- * 在 HTML 中引入 `@flun/webauthn-browser` 库,使用全局对象 `flunWebAuthnBrowser` 提供的 `startRegistration` 和 `startAuthentication` 方法;
+ * ### 前端代码(HTML + JavaScript)
+ * 在 HTML 中引入 `@flun/webauthn-browser` 库,使用全局对象 `flunWebAuthnBrowser` 提供的
+ * `startRegistration` 和 `startAuthentication` 方法;
  *
  * ```html
  * <!DOCTYPE html>
@@ -169,8 +170,8 @@
  *       });
  *       const options = await regOptionsRes.json();
  *
- *       // 2. 调用浏览器 WebAuthn API（由 @flun/webauthn-browser 封装）
- *       //    注意：必须使用 { optionsJSON: options } 格式
+ *       // 2. 调用浏览器 WebAuthn API(由 @flun/webauthn-browser 封装)
+ *       //    注意:必须使用 { optionsJSON: options } 格式
  *       const response = await flunWebAuthnBrowser.startRegistration({ optionsJSON: options });
  *
  *       // 3. 将响应发送到后端验证
@@ -181,7 +182,7 @@
  *       });
  *       const result = await verifyRes.json();
  *       if (result.verified) {
- *         alert('注册成功！');
+ *         alert('注册成功!');
  *       } else {
  *         alert('注册验证失败');
  *       }
@@ -210,7 +211,7 @@
  *       });
  *       const result = await verifyRes.json();
  *       if (result.verified) {
- *         alert('登录成功！');
+ *         alert('登录成功!');
  *       } else {
  *         alert('登录失败');
  *       }
@@ -221,33 +222,38 @@
  * ```
  *
  * **关键说明**
- * - 前端通过 `<script src="https://unpkg.com/@flun/webauthn-browser/dist/index.js"></script>` 引入,全局对象为 `flunWebAuthnBrowser`。
- * - 调用 `startRegistration` 和 `startAuthentication` 时，必须传入 `{ optionsJSON: options }` 格式的参数对象;
- * - 后端生成的 `options` 对象（来自 `generateRegistrationOptions` 或 `generateAuthenticationOptions`）直接作为 `optionsJSON` 的值。
- * - 生产环境中请使用 HTTPS（WebAuthn 要求安全上下文），并妥善存储挑战值和用户凭证;
+ * - 前端通过 `<script src="https://unpkg.com/@flun/webauthn-browser/dist/index.js"></script>` 引入,
+ *   全局对象为 `flunWebAuthnBrowser`;
+ * - 调用 `startRegistration` 和 `startAuthentication` 时,必须传入 `{ optionsJSON: options }` 格式的参数对象;
+ * - 后端生成的 `options` 对象(来自 `generateRegistrationOptions` 或 `generateAuthenticationOptions`)
+ *   直接作为 `optionsJSON` 的值;
+ * - 生产环境中请使用 HTTPS(WebAuthn 要求安全上下文),并妥善存储挑战值和用户凭证;
  *
  * **前端工具函数**
  *
- * `flunWebAuthnBrowser` 全局对象还提供了以下辅助函数,可用于特性检测、手动取消流程、编解码等操作：
+ * `flunWebAuthnBrowser` 全局对象还提供了以下辅助函数,可用于特性检测、手动取消流程、编解码等操作:
+ *
+ * `startAuthentication` 支持 `{ optionsJSON, useBrowserAutofill?, verifyBrowserAutofillInput? }` 参数;
+ * `browserSupportsWebAuthnAutofill` 依赖 `PublicKeyCredential.isConditionalMediationAvailable`;
  * ```js
  * browserSupportsWebAuthn();             // 检测当前浏览器是否支持 WebAuthn
- * browserSupportsWebAuthnAutofill();     // 检测浏览器是否支持 WebAuthn 条件式自动填充（需要 `PublicKeyCredential.isConditionalMediationAvailable`） |
- * platformAuthenticatorIsAvailable();    // 检测平台身份验证器（如 Windows Hello、指纹传感器）是否可用
- * startRegistration(options);            // 发起注册流程，参数 `{ optionsJSON, useAutoRegister? }`
- * startAuthentication(options);          // 发起认证流程，参数 `{ optionsJSON, useBrowserAutofill?, verifyBrowserAutofillInput? }`
+ * browserSupportsWebAuthnAutofill();     // 检测浏览器是否支持 WebAuthn 条件式自动填充
+ * platformAuthenticatorIsAvailable();    // 检测平台身份验证器(如 Windows Hello、指纹传感器)是否可用
+ * startRegistration(options);            // 发起注册流程,参数 `{ optionsJSON, useAutoRegister? }`
+ * startAuthentication(options);          // 发起认证流程
  * WebAuthnAbortService.cancelCeremony(); // 手动取消正在进行的注册/认证流程
- * class WebAuthnError{};                 // 自定义错误类，包含 `code` 属性，用于区分不同类型的 WebAuthn 错误
+ * class WebAuthnError{};                 // 自定义错误类,包含 `code` 属性,用于区分不同类型的 WebAuthn 错误
  * base64URLStringToBuffer(base64url);    // 将 Base64URL 字符串转换为 `ArrayBuffer`
  * bufferToBase64URLString(buffer);       // 将 `ArrayBuffer` 转换为 Base64URL 字符串
  * ```
- * 使用示例：
+ * 使用示例:
  * ```js
  * // 检测支持性
  * if (flunWebAuthnBrowser.browserSupportsWebAuthn()) {
  *   // 可以使用 WebAuthn
  * }
  *
- * // 取消流程（例如用户点击“取消”按钮）
+ * // 取消流程(例如用户点击"取消"按钮)
  * flunWebAuthnBrowser.WebAuthnAbortService.cancelCeremony();
  *
  * // 捕获错误

@@ -3,7 +3,7 @@ import { isBase64URL, toBase64, isBase64, fromBuffer } from './iso/index.js';
 /**
  * 将证书缓冲区转换为 OpenSSL 兼容的 PEM 文本格式;
  * - 查看定义:@see {@link convertCertBufferToPEM}
- * @param {string|BufferSource} certBuffer - 证书缓冲区，支持 base64 字符串、base64url 字符串或二进制数据
+ * @param {string|BufferSource} certBuffer - 证书缓冲区,支持 base64 字符串、base64url 字符串或二进制数据
  * @returns {string} OpenSSL 兼容的 PEM 格式证书字符串
  */
 const convertCertBufferToPEM = certBuffer => {

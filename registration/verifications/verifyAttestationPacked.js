@@ -15,7 +15,7 @@ import { verifyAttestationWithMetadata, MetadataService } from '../../metadata/m
  * @param {BufferSource} options.credentialPublicKey - COSE 编码的凭证公钥
  * @param {BufferSource} options.aaguid - 认证器 Attestation GUID
  * @param {string[]} [options.rootCertificates] - PEM 格式的可信根证书列表
- * @returns {Promise<boolean>} 验证通过时返回 true，否则抛出错误
+ * @returns {Promise<boolean>} 验证通过时返回 true,否则抛出错误
  */
 const verifyAttestationPacked = async options => {
     const { attStmt, clientDataHash, authData, credentialPublicKey, aaguid, rootCertificates, } = options,
@@ -29,7 +29,8 @@ const verifyAttestationPacked = async options => {
     let verified = false;
 
     if (x5c) {
-        const { subject, basicConstraintsCA, version, notBefore, notAfter, parsedCertificate } = getCertificateInfo(x5c[0]),
+        const { subject, basicConstraintsCA, version, notBefore, notAfter, parsedCertificate } =
+            getCertificateInfo(x5c[0]),
             { OU, CN, O, C } = subject;
 
         if (OU !== 'Authenticator Attestation') throw new Error('证书 OU 不是 "Authenticator Attestation" (Packed|Full)');
@@ -37,7 +38,7 @@ const verifyAttestationPacked = async options => {
         if (!O) throw new Error('证书 O 为空 (Packed|Full)');
         if (!C || C.length !== 2) throw new Error('证书 C 不是两位 ISO 3166 国家代码 (Packed|Full)');
         if (basicConstraintsCA) throw new Error('证书的基本约束 CA 不为 `false` (Packed|Full)');
-        if (version !== 2) throw new Error('证书版本不是 `3`（ASN.1 值为 2）(Packed|Full)');
+        if (version !== 2) throw new Error('证书版本不是 `3`(ASN.1 值为 2)(Packed|Full)');
 
         let now = new Date();
         if (notBefore > now) throw new Error(`证书在 "${notBefore.toString()}" 之前无效 (Packed|Full)`);
@@ -51,10 +52,10 @@ const verifyAttestationPacked = async options => {
             throw new Error(`${err.message} (Packed|Full)`);
         }
 
-        // 如果可用，使用 metadata 语句中的信息验证 attestation alg 和 x5c
+        // 如果可用,使用 metadata 语句中的信息验证 attestation alg 和 x5c
         const statement = await MetadataService.getStatement(aaguid);
         if (statement) {
-            // x5c 的存在意味着这是一个完整 attestation。检查 attestationTypes 是否包含 packed attestations
+            // x5c 的存在意味着这是一个完整 attestation;检查 attestationTypes 是否包含 packed attestations
             if (statement.attestationTypes.indexOf('basic_full') < 0)
                 throw new Error('元数据中未指示支持完整 attestation (Packed|Full)');
             try {
@@ -73,7 +74,9 @@ const verifyAttestationPacked = async options => {
 
         verified = await verifySignature({ signature: sig, data: signatureBase, x509Certificate: x5c[0] });
     }
-    else verified = await verifySignature({ signature: sig, data: signatureBase, credentialPublicKey, hashAlgorithm: alg });
+    else verified = await verifySignature({
+        signature: sig, data: signatureBase, credentialPublicKey, hashAlgorithm: alg
+    });
 
     return verified;
 };

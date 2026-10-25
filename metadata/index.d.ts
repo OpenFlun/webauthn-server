@@ -29,7 +29,7 @@ declare module './defaultRootCerts/index.js' {
 // ================================= metadata.js =================================
 /**
  *
- * 文件导出内容：
+ * 文件导出内容:
  * ```js
  * const AlgSign=[];                               // 支持的签名算法数组
  * parseJWT();                                     // 将 JWT 处理为 JavaScript 友好的数据结构
@@ -63,7 +63,7 @@ declare module './settings.js' {
 // ================================= 整体导出入口 =================================
 /**
  *
- * 模块导出内容：
+ * 模块导出内容:
  * ```js
  * const AlgSign=[];                               // 支持的签名算法数组
  * parseJWT();                                     // 将 JWT 处理为 JavaScript 友好的数据结构

@@ -5,7 +5,7 @@ import { toHex } from './iso/index.js';
  * - 查看定义:@see {@link convertAAGUIDToString}
  *
  * @param {BufferSource} aaguid - 16 字节的 AAGUID 缓冲区
- * @returns {string} 格式化后的 UUID 字符串（如 "adce0002-35bc-c60a-648b-0b25f1f05503"）
+ * @returns {string} 格式化后的 UUID 字符串(如 "adce0002-35bc-c60a-648b-0b25f1f05503")
  */
 const convertAAGUIDToString = aaguid => {
     // Raw Hex: adce000235bcc60a648b0b25f1f05503

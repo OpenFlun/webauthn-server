@@ -3,10 +3,12 @@
 ![WebAuthn](https://img.shields.io/badge/WebAuthn-Simplified-blueviolet?style=for-the-badge&logo=WebAuthn)
 [![npm (scoped)](https://img.shields.io/npm/v/@flun/webauthn-server?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@flun/webauthn-server)
 
-**@flun/webauthn-server** 是一个专为 Node.js 环境设计的 WebAuthn（含 Passkeys）服务端工具库，采用 TypeScript 编写，提供对证书、密钥及 CBOR 编码的完整处理能力;它简化了 FIDO2/Passkey 身份验证后端的构建过程，支持当前所有主流的 WebAuthn 认证格式;
+**@flun/webauthn-server** 是一个专为 Node.js 环境设计的 WebAuthn(含 Passkeys)服务端工具库,采用 TypeScript 编写,提供对证书、
+密钥及 CBOR 编码的完整处理能力;它简化了 FIDO2/Passkey 身份验证后端的构建过程,支持当前所有主流的 WebAuthn 认证格式;
 并且支持Windows下优先调用底层Windows hello 注册/认证(避免环境干扰与安全);
 
-> **模块规范**：本包使用 ESM 模块编写;要求 Node.js ≥ 22.12.0，若使用低版本 Node 则需通过 `import` 语法导入（不建议在低于 22.12.0 的环境中使用 `require()`）;
+> **模块规范**:本包使用 ESM 模块编写;要求 Node.js ≥ 22.12.0,
+> 若使用低版本 Node 则需通过 `import` 语法导入(不建议在低于 22.12.0 的环境中使用 `require()`);
 
 ## 目录
 
@@ -16,7 +18,7 @@
 - [安装](#安装)
   - [Node.js 22.12.0 及以上版本](#nodejs-22120-及以上版本)
 - [主要功能](#主要功能)
-- [Windows下优先调用底层Windows hello 注册/认证(避免环境干扰与安全);](#windows下优先调用底层windows-hello-注册认证避免环境干扰与安全)
+- [Windows下优先调用底层Windows hello 注册/认证(避免环境干扰与安全);][win-hello]
 - [快速开始](#快速开始)
   - [后端集成示例](#后端集成示例)
   - [前端配合说明](#前端配合说明)
@@ -24,7 +26,7 @@
   - [注册相关](#注册相关)
   - [认证相关](#认证相关)
   - [元数据与设置服务](#元数据与设置服务)
-  - [辅助工具函数（`helpers` 模块）](#辅助工具函数helpers-模块)
+  - [辅助工具函数(`helpers` 模块)](#辅助工具函数helpers-模块)
     - [编解码与转换](#编解码与转换)
     - [COSE 公钥处理](#cose-公钥处理)
     - [证书处理](#证书处理)
@@ -41,7 +43,8 @@
 
 ### 允许安装脚本执行
 
-本包在安装时可能触发某些依赖包的自动脚本（如 `postinstall` 等）;如果你的 npm 全局配置或项目配置禁止了脚本执行（例如设置了 `ignore-scripts=true`）,可能会导致安装不完整或运行时异常;
+本包在安装时可能触发某些依赖包的自动脚本(如 `postinstall` 等);如果你的 npm 全局配置或项目配置禁止了脚本执行(例如设置了 
+`ignore-scripts=true`),可能会导致安装不完整或运行时异常;
 
 推荐在项目根目录的 `package.json` 中添加 `allowScripts` 字段,显式放行本包及其依赖的脚本:
 
@@ -49,12 +52,13 @@
 {
   "allowScripts": {
     "@flun/webauthn-server": true
-    // 如果依赖的其它包（如 bcrypt、electron-winstaller 等）也有脚本,请按需添加,格式相同
+    // 如果依赖的其它包(如 bcrypt、electron-winstaller 等)也有脚本,请按需添加,格式相同
   }
 }
 ```
 
-> 如果你信任所有安装包,也可以直接在项目 `.npmrc` 中设置 `allow-scripts = false`（表示关闭脚本拦截,所有脚本均允许执行）,或删除 `ignore-scripts` 字段;
+> 如果你信任所有安装包,也可以直接在项目 `.npmrc` 中设置 `allow-scripts = false`(表示关闭脚本拦截,所有脚本均允许执行),
+  或删除 `ignore-scripts` 字段;
 
 ---
 
@@ -66,26 +70,28 @@
 npm install @flun/webauthn-server
 ```
 
-> **注意**：本库依赖 Node.js 内置的 `crypto`、`fetch` 等模块，请确保运行环境为 Node.js ≥ 22.12.0;
+> **注意**:本库依赖 Node.js 内置的 `crypto`、`fetch` 等模块,请确保运行环境为 Node.js ≥ 22.12.0;
 
 ---
 
 ## 主要功能
 
 - ✅ **WebAuthn 注册与认证**
-  提供 `generateRegistrationOptions` / `verifyRegistrationResponse` 和 `generateAuthenticationOptions` / `verifyAuthenticationResponse` 两对核心方法，完整实现 WebAuthn 后端逻辑;
+  提供 `generateRegistrationOptions` / `verifyRegistrationResponse` 和 `generateAuthenticationOptions` / 
+  `verifyAuthenticationResponse` 两对核心方法,完整实现 WebAuthn 后端逻辑;
 
 - ✅ **全格式证明支持**
   支持 `packed`、`fido-u2f`、`android-safetynet`、`android-key`、`tpm`、`apple`、`none` 等所有标准认证格式;
 
 - ✅ **元数据服务 (MDS)**
-  内置 `MetadataService` 可下载并解析 FIDO 联盟的元数据 BLOB，验证认证器真伪与状态;
+  内置 `MetadataService` 可下载并解析 FIDO 联盟的元数据 BLOB,验证认证器真伪与状态;
 
 - ✅ **证书链验证**
   提供证书路径验证、吊销检查、X.509 解析等工具;
 
 - ✅ **丰富的辅助工具**
-  通过 `@flun/webauthn-server/helpers` 子路径导出大量底层工具：Base64URL 编解码、COSE ↔ PKCS 转换、authData 解析、签名验证等;
+  通过 `@flun/webauthn-server/helpers` 子路径导出大量底层工具:Base64URL 编解码、COSE ↔ PKCS 转换、authData 解析、
+  签名验证等;
 
 - ✅ **Windows hello 底层调用**
    Windows下优先调用底层Windows hello 注册/认证(避免环境干扰与安全);
@@ -95,7 +101,7 @@ npm install @flun/webauthn-server
 
 ### 后端集成示例
 
-以下是一个基于 Express 的完整后端示例，展示了用户注册与登录的 WebAuthn 流程;
+以下是一个基于 Express 的完整后端示例,展示了用户注册与登录的 WebAuthn 流程;
 
 ```js
 import express from 'express';
@@ -114,7 +120,7 @@ const users = {
   }
 };
 
-// 临时挑战存储（生产环境建议使用 session 或 redis）
+// 临时挑战存储(生产环境建议使用 session 或 redis)
 const challengeStore = new Map();
 
 // 1. 注册 - 生成选项
@@ -211,13 +217,13 @@ app.listen(3001, () => console.log('Backend running on port 3001'));
 
 ### 前端配合说明
 
-前端需使用配套的浏览器库 `@flun/webauthn-browser`，可通过 CDN 或 npm 引入;
+前端需使用配套的浏览器库 `@flun/webauthn-browser`,可通过 CDN 或 npm 引入;
 
 ```html
 <script src="https://unpkg.com/@flun/webauthn-browser/dist/index.js"></script>
 ```
 
-调用示例：
+调用示例:
 
 ```js
 // 注册
@@ -248,25 +254,25 @@ await fetch('/api/login/complete', {
 | 方法                                   | 描述                                                 |
 | -------------------------------------- | ---------------------------------------------------- |
 | `generateRegistrationOptions(options)` | 生成用于 `navigator.credentials.create()` 的选项参数 |
-| `verifyRegistrationResponse(options)`  | 验证客户端返回的注册响应，返回验证结果及凭证信息     |
+| `verifyRegistrationResponse(options)`  | 验证客户端返回的注册响应,返回验证结果及凭证信息     |
 
 ### 认证相关
 
 | 方法                                     | 描述                                                 |
 | ---------------------------------------- | ---------------------------------------------------- |
 | `generateAuthenticationOptions(options)` | 生成用于 `navigator.credentials.get()` 的选项参数    |
-| `verifyAuthenticationResponse(options)`  | 验证客户端返回的认证响应，返回验证结果及更新的计数器 |
+| `verifyAuthenticationResponse(options)`  | 验证客户端返回的认证响应,返回验证结果及更新的计数器 |
 
 ### 元数据与设置服务
 
 | 导出项                              | 描述                                                               |
 | ----------------------------------- | ------------------------------------------------------------------ |
-| `MetadataService`                   | 协调 FIDO 元数据交互的基础服务实例（`BaseMetadataService` 的实例） |
+| `MetadataService`                   | 协调 FIDO 元数据交互的基础服务实例(`BaseMetadataService` 的实例) |
 | `SettingsService`                   | 管理各类 attestation 声明格式根证书的服务实例                      |
 | `supportedCOSEAlgorithmIdentifiers` | 支持的加密算法标识符数组                                           |
 | `AlgSign`                           | 支持的签名算法数组                                                 |
 
-### 辅助工具函数（`helpers` 模块）
+### 辅助工具函数(`helpers` 模块)
 
 可通过 `@flun/webauthn-server/helpers` 导入所有底层工具;
 
@@ -321,7 +327,7 @@ await fetch('/api/login/complete', {
 | ------------------------------------ | ----------------------------- |
 | `decodeAttestationObject(buf)`       | 解析 attestationObject 缓冲区 |
 | `decodeClientDataJSON(base64url)`    | 解析 clientDataJSON           |
-| `parseAuthenticatorData(authData)`   | 解析 authData，返回可读结构   |
+| `parseAuthenticatorData(authData)`   | 解析 authData,返回可读结构   |
 | `parseBackupFlags(flags)`            | 解析备份状态标志 (BE/BS)      |
 | `decodeAuthenticatorExtensions(buf)` | 解码扩展数据                  |
 | `InvalidBackupFlags`                 | 备份标志无效时抛出的错误类    |
@@ -332,7 +338,7 @@ await fetch('/api/login/complete', {
 | ------------------------------------------------- | --------------------------------- |
 | `verifySignature({ signature, data, publicKey })` | 通用签名验证入口                  |
 | `verifyEC2()`, `verifyOKP()`, `verifyRSA()`       | 特定算法签名验证                  |
-| `toHash(data, algorithm?)`                        | 计算哈希摘要（默认 SHA-256）      |
+| `toHash(data, algorithm?)`                        | 计算哈希摘要(默认 SHA-256)      |
 | `mapX509SignatureAlgToCOSEAlg(oid)`               | X.509 签名算法 OID → COSE 算法 ID |
 
 #### 通用工具
@@ -356,7 +362,7 @@ await fetch('/api/login/complete', {
 
 ## 支持的认证格式
 
-本库完全兼容 [W3C WebAuthn 规范](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats) 中定义的所有证明格式：
+本库完全兼容 [W3C WebAuthn 规范](https://w3c.github.io/webauthn/#sctn-defined-attestation-formats) 中定义的所有证明格式:
 
 - **Packed**
 - **FIDO U2F**
@@ -372,11 +378,11 @@ await fetch('/api/login/complete', {
 
 ## 错误处理
 
-库中大部分验证方法会在失败时抛出明确的错误类，例如：
+库中大部分验证方法会在失败时抛出明确的错误类,例如:
 
-- `UnexpectedRPIDHash`：RP ID 哈希不匹配
-- `InvalidSubjectAndIssuer`：证书链无效
-- `InvalidBackupFlags`：备份标志组合非法
+- `UnexpectedRPIDHash`:RP ID 哈希不匹配
+- `InvalidSubjectAndIssuer`:证书链无效
+- `InvalidBackupFlags`:备份标志组合非法
 
 建议使用 `try...catch` 捕获这些错误并作出相应处理;
 
@@ -390,3 +396,5 @@ ISC © [flun](https://github.com/OpenFlun)
 - [GitHub 仓库](https://github.com/OpenFlun/webauthn-server)
 - [npm 包页面](https://www.npmjs.com/package/@flun/webauthn-server)
 - [配套前端库 @flun/webauthn-browser](https://www.npmjs.com/package/@flun/webauthn-browser)
+
+[win-hello]: #windows下优先调用底层windows-hello-注册认证避免环境干扰与安全

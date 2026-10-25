@@ -20,7 +20,7 @@ const convertMapToObjectDeep = input => {
  * 将身份验证器扩展数据缓冲区转换为相应的对象
  * - 查看定义:@see {@link decodeAuthenticatorExtensions}
  *
- * @param {BufferSource} extensionData - 身份验证器扩展数据缓冲区（CBOR 编码）
+ * @param {BufferSource} extensionData - 身份验证器扩展数据缓冲区(CBOR 编码)
  * @returns {Record<string, unknown>} 解码并转换为普通对象的扩展数据
  */
 const decodeAuthenticatorExtensions = extensionData => {
@@ -29,7 +29,7 @@ const decodeAuthenticatorExtensions = extensionData => {
         toCBOR = decodeFirst(extensionData);
     }
     catch (err) {
-        throw new Error(`解码身份验证器扩展时出错：${err.message}`);
+        throw new Error(`解码身份验证器扩展时出错:${err.message}`);
     }
     return convertMapToObjectDeep(toCBOR);
 };

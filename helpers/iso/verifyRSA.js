@@ -10,10 +10,10 @@ import { mapCoseAlgToWebCryptoKeyAlgName } from './mapCoseAlgToWebCryptoKeyAlgNa
  *
  * - 查看定义:@see {@link verifyRSA}
  * @param {Object} opts - 验证选项
- * @param {Map<number, number | BufferSource>} opts.cosePublicKey - COSE 格式的 RSA 公钥，需包含 alg、n、e 字段
- * @param {BufferSource} opts.signature - 待验证的签名（原始格式）
+ * @param {Map<number, number | BufferSource>} opts.cosePublicKey - COSE 格式的 RSA 公钥,需包含 alg、n、e 字段
+ * @param {BufferSource} opts.signature - 待验证的签名(原始格式)
  * @param {BufferSource} opts.data - 原始签名数据
- * @param {string} [opts.shaHashOverride] - 可选,强制使用的哈希算法名（如 'SHA-256'）,优先级高于公钥中的 alg
+ * @param {string} [opts.shaHashOverride] - 可选,强制使用的哈希算法名(如 'SHA-256'),优先级高于公钥中的 alg
  * @returns {Promise<boolean>} 验证通过返回 true,否则 false
  * @throws {Error} 当公钥缺少必要参数、alg 无效或算法不支持时抛出错误
  */
@@ -40,10 +40,10 @@ const verifyRSA = async opts => {
         else if (keyAlgorithm.hash.name === 'SHA-1') keyData.alg = 'RS1';
     } else if (keyAlgorithm.name === 'RSA-PSS') {
         /**
-         * 盐长度,默认值为 20,但惯例是使用 hLen（哈希函数输出长度,单位字节）;
+         * 盐长度,默认值为 20,但惯例是使用 hLen(哈希函数输出长度,单位字节);
          * 允许盐长度为零,此时会产生确定性的签名值;实际使用的盐长度可从签名值中确定;
          *
-         * 来源：https://www.cryptosys.net/pki/manpki/pki_rsaschemes.html
+         * 来源:https://www.cryptosys.net/pki/manpki/pki_rsaschemes.html
          */
         let saltLength = 0;
         if (keyAlgorithm.hash.name === 'SHA-256') keyData.alg = 'PS256', saltLength = 32;      // 256 位 => 32 字节

@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-dupe-keys
 /**
  * 这里汇集了大量的领域知识,与源文档的联系较为模糊;
- * 如需查找有关这些值的更多信息,可参考 WebAuthn API 中引用的以下可信计算组织 TPM 库文档：
+ * 如需查找有关这些值的更多信息,可参考 WebAuthn API 中引用的以下可信计算组织 TPM 库文档:
  *
  * - https://www.trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-1-Architecture-01.38.pdf
  * - https://www.trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-2-Structures-01.38.pdf
@@ -9,7 +9,7 @@
  */
 
 /**
- * 6.9 TPM_ST（结构标签）
+ * 6.9 TPM_ST(结构标签)
  * - 查看定义:@see {@link TPM_ST}
  */
 const TPM_ST = {
@@ -24,16 +24,18 @@ const TPM_ST = {
 };
 
 /**
- * 6.3 TPM_ALG_ID（算法标识符）
+ * 6.3 TPM_ALG_ID(算法标识符)
  * - 查看定义:@see {@link TPM_ALG}
  */
 const TPM_ALG = {
     0x0000: 'TPM_ALG_ERROR', 0x0001: 'TPM_ALG_RSA', 0x0004: 'TPM_ALG_SHA',
     // @ts-ignore 2300
-    0x0004: 'TPM_ALG_SHA1', 0x0005: 'TPM_ALG_HMAC', 0x0006: 'TPM_ALG_AES', 0x0007: 'TPM_ALG_MGF1', 0x0008: 'TPM_ALG_KEYEDHASH',
+    0x0004: 'TPM_ALG_SHA1', 0x0005: 'TPM_ALG_HMAC', 0x0006: 'TPM_ALG_AES', 0x0007: 'TPM_ALG_MGF1',
+    0x0008: 'TPM_ALG_KEYEDHASH',
     0x000a: 'TPM_ALG_XOR', 0x000b: 'TPM_ALG_SHA256', 0x000c: 'TPM_ALG_SHA384', 0x000d: 'TPM_ALG_SHA512',
     0x0010: 'TPM_ALG_NULL', 0x0012: 'TPM_ALG_SM3_256', 0x0013: 'TPM_ALG_SM4', 0x0014: 'TPM_ALG_RSASSA',
-    0x0015: 'TPM_ALG_RSAES', 0x0016: 'TPM_ALG_RSAPSS', 0x0017: 'TPM_ALG_OAEP', 0x0018: 'TPM_ALG_ECDSA', 0x0019: 'TPM_ALG_ECDH',
+    0x0015: 'TPM_ALG_RSAES', 0x0016: 'TPM_ALG_RSAPSS', 0x0017: 'TPM_ALG_OAEP',
+    0x0018: 'TPM_ALG_ECDSA', 0x0019: 'TPM_ALG_ECDH',
     0x001a: 'TPM_ALG_ECDAA', 0x001b: 'TPM_ALG_SM2', 0x001c: 'TPM_ALG_ECSCHNORR', 0x001d: 'TPM_ALG_ECMQV',
     0x0020: 'TPM_ALG_KDF1_SP800_56A', 0x0021: 'TPM_ALG_KDF2', 0x0022: 'TPM_ALG_KDF1_SP800_108', 0x0023: 'TPM_ALG_ECC',
     0x0025: 'TPM_ALG_SYMCIPHER', 0x0026: 'TPM_ALG_CAMELLIA', 0x0040: 'TPM_ALG_CTR', 0x0041: 'TPM_ALG_OFB',
@@ -41,7 +43,7 @@ const TPM_ALG = {
 };
 
 /**
- * 6.4 TPM_ECC_CURVE（椭圆曲线）
+ * 6.4 TPM_ECC_CURVE(椭圆曲线)
  * - 查看定义:@see {@link TPM_ECC_CURVE }
  */
 const TPM_ECC_CURVE = {
@@ -53,9 +55,9 @@ const TPM_ECC_CURVE = {
 
 /**
  * - 查看定义:@see {@link TPM_MANUFACTURERS}
- * - 来源：https://trustedcomputinggroup.org/resource/vendor-id-registry/
+ * - 来源:https://trustedcomputinggroup.org/resource/vendor-id-registry/
  *
- * - TPM 制造商 ID 到厂商名称的映射表(最新版本)：
+ * - TPM 制造商 ID 到厂商名称的映射表(最新版本):
  * https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-Vendor-ID-Registry-Version-1.02-Revision-1.00.pdf
  */
 const TPM_MANUFACTURERS = {
@@ -71,7 +73,7 @@ const TPM_MANUFACTURERS = {
     'id:48504500': { name: 'HPE', id: 'HPE' },
     'id:48495349': { name: 'Huawei', id: 'HISI' },
     'id:49424d00': { name: 'IBM', id: 'IBM' },
-    'id:49424D00': { name: 'IBM', id: 'IBM' }, // 与上一行相同的 IBM ID，仅按 TPM 规范将 'D' 大写
+    'id:49424D00': { name: 'IBM', id: 'IBM' }, // 与上一行相同的 IBM ID,仅按 TPM 规范将 'D' 大写
     'id:49465800': { name: 'Infineon', id: 'IFX' },
     'id:494E5443': { name: 'Intel', id: 'INTC' },
     'id:4C454E00': { name: 'Lenovo', id: 'LEN' },

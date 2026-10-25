@@ -2,9 +2,10 @@ import { AsnParser, OctetString } from '@peculiar/asn1-schema';
 import { areEqual, toHex } from './iso/index.js';
 
 /**
- * attestation 证书扩展 OID：`id-fido-gen-ce-aaguid`
+ * attestation 证书扩展 OID:`id-fido-gen-ce-aaguid`
  *
- * 来源：https://fidoalliance.org/specs/fido-v2.0-ps-20150904/fido-key-attestation-v2.0-ps-20150904.html#verifying-an-attestation-statement
+ * 来源: [FIDO 规范文档][fido-att] 的「Verifying an Attestation Statement」章节
+ * [fido-att]: https://fidoalliance.org/specs/fido-v2.0-ps-20150904/fido-key-attestation-v2.0-ps-20150904.html
  * @type {string}
  */
 const id_fido_gen_ce_aaguid = '1.3.6.1.4.1.45724.1.1.4';
@@ -13,9 +14,9 @@ const id_fido_gen_ce_aaguid = '1.3.6.1.4.1.45724.1.1.4';
  * 查找 id-fido-gen-ce-aaguid 证书扩展,如果存在,则将其与 attestation 语句中的 AAGUID 进行比较;
  * - 查看定义:@see {@link validateExtFIDOGenCEAAGUID}
  *
- * @param {Array<{ extnID: string, extnValue: ArrayBuffer }>} [certExtensions] - 证书扩展列表（可选）
+ * @param {Array<{ extnID: string, extnValue: ArrayBuffer }>} [certExtensions] - 证书扩展列表(可选)
  * @param {BufferSource} aaguid - attestation 语句中的 AAGUID 值
- * @returns {boolean} 验证通过时返回 true，否则抛出错误
+ * @returns {boolean} 验证通过时返回 true,否则抛出错误
  */
 const validateExtFIDOGenCEAAGUID = (certExtensions, aaguid) => {
     if (!certExtensions) return true; // 证书没有扩展,无需验证

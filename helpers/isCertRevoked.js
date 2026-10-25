@@ -1,4 +1,7 @@
-import { AuthorityKeyIdentifierExtension, CRLDistributionPointsExtension, SubjectKeyIdentifierExtension, X509Crl } from '@peculiar/x509';
+import {
+    AuthorityKeyIdentifierExtension, CRLDistributionPointsExtension,
+    SubjectKeyIdentifierExtension, X509Crl
+} from '@peculiar/x509';
 import { fetch } from './fetch.js';
 
 /**
@@ -12,10 +15,10 @@ const cacheRevokedCerts = {};
  * - CRL 证书结构参考 https://tools.ietf.org/html/rfc5280#page-117
  *
  * @typedef {Object} X509Certificate
- * @property {string} serialNumber - 证书序列号（十六进制字符串）
+ * @property {string} serialNumber - 证书序列号(十六进制字符串)
  * @property {Array<import('@peculiar/x509').Extension>} [extensions] - 证书扩展项列表
  *
- * @param {X509Certificate} cert - 要检查吊销状态的证书（X.509 证书实例,通常来自 @peculiar/x509）
+ * @param {X509Certificate} cert - 要检查吊销状态的证书(X.509 证书实例,通常来自 @peculiar/x509)
  * @returns {Promise<boolean>} 如果证书已被吊销则返回 `true`,否则返回 `false`
  */
 const isCertRevoked = async cert => {
@@ -29,7 +32,7 @@ const isCertRevoked = async cert => {
         else if (ext instanceof CRLDistributionPointsExtension) extCRLDistributionPoints = ext;
     });
 
-    // 尝试获取证书颁发机构（CA）的密钥标识符,用于缓存
+    // 尝试获取证书颁发机构(CA)的密钥标识符,用于缓存
     if (extAuthorityKeyID && extAuthorityKeyID.keyId) keyIdentifier = extAuthorityKeyID.keyId;
     // 当前证书可能是自签名的根证书,尝试使用主体密钥标识符扩展
     else if (extSubjectKeyID) keyIdentifier = extSubjectKeyID.keyId;

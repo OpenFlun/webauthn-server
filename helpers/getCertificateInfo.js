@@ -13,9 +13,9 @@ const issuerSubjectIDKey = {
 };
 
 /**
- * 将颁发者或主体信息中的各个部分拼接成字符串，以便于比较；
+ * 将颁发者或主体信息中的各个部分拼接成字符串,以便于比较;
  *
- * 拼接顺序看似随意，实际是固定的（C, O, OU, CN），保证字符串化时顺序一致即可；
+ * 拼接顺序看似随意,实际是固定的(C, O, OU, CN),保证字符串化时顺序一致即可;
  *
  * @param {Object} input - 包含 C/O/OU/CN 字段的对象
  * @param {string} [input.C] - 国家
@@ -37,7 +37,7 @@ const issuerSubjectToString = input => {
  * 提取 PEM 证书信息
  * - 查看定义:@see {@link getCertificateInfo}
  *
- * @param {ArrayBuffer} leafCertBuffer - 由 convertASN1toPEM(x5c[0]) 返回的证书缓冲区（DER 格式）
+ * @param {ArrayBuffer} leafCertBuffer - 由 convertASN1toPEM(x5c[0]) 返回的证书缓冲区(DER 格式)
  * @returns {{
  *   issuer: Record<string, string>,
  *   subject: Record<string, string>,
@@ -52,14 +52,14 @@ const getCertificateInfo = leafCertBuffer => {
     const x509 = AsnParser.parse(leafCertBuffer, Certificate), parsedCert = x509.tbsCertificate,
         issuer = { combined: '' }, subject = { combined: '' };
 
-    // 颁发者（Issuer）
+    // 颁发者(Issuer)
     parsedCert.issuer.forEach(([iss]) => {
         const key = issuerSubjectIDKey[iss.type];
         if (key) issuer[key] = iss.value.toString();
     });
     issuer.combined = issuerSubjectToString(issuer);
 
-    // 主体（Subject）
+    // 主体(Subject)
     parsedCert.subject.forEach(([iss]) => {
         const key = issuerSubjectIDKey[iss.type];
         if (key) subject[key] = iss.value.toString();
@@ -68,7 +68,7 @@ const getCertificateInfo = leafCertBuffer => {
 
     let basicConstraintsCA = false;
     if (parsedCert.extensions) {
-        // 遍历扩展项，查找 BasicConstraints 扩展
+        // 遍历扩展项,查找 BasicConstraints 扩展
         for (const ext of parsedCert.extensions) {
             if (ext.extnID === id_ce_basicConstraints) {
                 const basicConstraints = AsnParser.parse(ext.extnValue, BasicConstraints);
@@ -82,8 +82,8 @@ const getCertificateInfo = leafCertBuffer => {
         subject,                                            // 主体信息
         version: parsedCert.version,                        // 证书版本
         basicConstraintsCA,                                 // 是否为 CA 证书
-        notBefore: parsedCert.validity.notBefore.getTime(), // 生效时间（毫秒时间戳）
-        notAfter: parsedCert.validity.notAfter.getTime(),   // 失效时间（毫秒时间戳）
+        notBefore: parsedCert.validity.notBefore.getTime(), // 生效时间(毫秒时间戳)
+        notAfter: parsedCert.validity.notAfter.getTime(),   // 失效时间(毫秒时间戳)
         parsedCertificate: x509,                            // 完整解析后的证书对象
     };
 };

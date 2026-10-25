@@ -18,8 +18,8 @@ class BaseSettingsService {
     /**
      * 设置指定标识符的根证书列表
      * @param {Object} opts 配置项
-     * @param {string} opts.identifier 证书标识符（如 'android-key'）
-     * @param {(Uint8Array|string)[]} opts.certificates 证书数组，支持 Uint8Array 或 PEM 字符串
+     * @param {string} opts.identifier 证书标识符(如 'android-key')
+     * @param {(Uint8Array|string)[]} opts.certificates 证书数组,支持 Uint8Array 或 PEM 字符串
      * @returns {void}
      */
     setRootCertificates(opts) {
@@ -35,7 +35,7 @@ class BaseSettingsService {
      * 获取指定标识符的根证书列表
      * @param {Object} opts 配置项
      * @param {string} opts.identifier 证书标识符
-     * @returns {string[]} 证书 PEM 字符串数组，若不存在则返回空数组
+     * @returns {string[]} 证书 PEM 字符串数组,若不存在则返回空数组
      */
     getRootCertificates(opts) {
         const { identifier } = opts;
@@ -46,7 +46,7 @@ class BaseSettingsService {
 /**
  * 一个基础服务,用于指定所有支持 attestation 语句格式接受的根证书;
  *
- * 此外,默认包含以下语句格式的根证书：
+ * 此外,默认包含以下语句格式的根证书:
  *
  * - `'android-key'`
  * - `'android-safetynet'`

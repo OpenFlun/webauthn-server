@@ -1,7 +1,7 @@
 import { getRandomValues } from './iso/index.js';
 
 /**
- * 使得在测试过程中可以模拟（stub）该函数的返回值
+ * 使得在测试过程中可以模拟(stub)该函数的返回值
  * - 查看定义:@see {@link _generateUserIDInternals}
  * @ignore 不要将此内容包含在文档输出中
  * @type {{ stubThis: (value: Uint8Array) => Uint8Array }}

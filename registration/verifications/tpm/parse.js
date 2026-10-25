@@ -3,10 +3,10 @@ import { toDataView, concat } from '../../../helpers/index.js';
 
 // ================================= parseCertInfo函数 =================================
 /**
- * 将 TPM 认证信息（certInfo）解析为可读的结构化数据
+ * 将 TPM 认证信息(certInfo)解析为可读的结构化数据
  * - 查看定义:@see {@link parseCertInfo}
  *
- * @param {BufferSource} certInfo - 原始的 TPM 认证信息（certInfo）字节数据
+ * @param {BufferSource} certInfo - 原始的 TPM 认证信息(certInfo)字节数据
  * @returns {{
  *   magic: number,
  *   type: string,
@@ -69,7 +69,7 @@ const parseCertInfo = certInfo => {
 /**
  * 解析 TPM 证明中的 pubArea 缓冲区
  * - 查看定义:@see {@link parsePubArea}
- * - 参考规范 12.2.4 TPMT_PUBLIC：
+ * - 参考规范 12.2.4 TPMT_PUBLIC:
  * https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-2-Structures-00.96-130315.pdf
  *
  * @param {BufferSource} pubArea - 包含 TPMT_PUBLIC 结构的原始字节缓冲区
@@ -105,7 +105,7 @@ const parsePubArea = pubArea => {
     const nameAlg = TPM_ALG[dataView.getUint16(pointer)];
     pointer += 2;
 
-    // 获取一些身份验证器的属性（？）
+    // 获取一些身份验证器的属性(?)
     // const objectAttributesInt = pubArea.slice(pointer, (pointer += 4)).readUInt32BE(0);
     const objectAttributesInt = dataView.getUint32(pointer);
     pointer += 4;
@@ -140,7 +140,7 @@ const parsePubArea = pubArea => {
         pointer += 4, parameters.rsa = { symmetric, scheme, keyBits, exponent };
 
         /**
-         * 参考规范 11.2.4.5 TPM2B_PUBLIC_KEY_RSA：
+         * 参考规范 11.2.4.5 TPM2B_PUBLIC_KEY_RSA:
          * https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-2-Structures-00.96-130315.pdf
          */
         // const uniqueLength = pubArea.slice(pointer, (pointer += 2)).readUInt16BE(0);
@@ -159,7 +159,7 @@ const parsePubArea = pubArea => {
         parameters.ecc = { symmetric, scheme, curveID, kdf };
 
         /**
-         * 参考规范 11.2.5.1 TPM2B_ECC_PARAMETER：
+         * 参考规范 11.2.5.1 TPM2B_ECC_PARAMETER:
          * https://trustedcomputinggroup.org/wp-content/uploads/TPM-Rev-2.0-Part-2-Structures-00.96-130315.pdf
          */
         // 获取 X

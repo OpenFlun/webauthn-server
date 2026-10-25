@@ -7,7 +7,8 @@ import { getWebCrypto } from './getWebCrypto.js';
  * - 查看定义:@see {@link importKey}
  * @param {Object} opts - 配置选项;
  * @param {JsonWebKey} opts.keyData - JWK 格式的密钥数据,需包含密钥类型、算法参数等必要字段;
- * @param {Object} opts.algorithm - 密钥对应的算法标识符或算法参数对象,例如 `{ name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }`。
+ * @param {Object} opts.algorithm - 密钥对应的算法标识符或算法参数对象,
+ *   例如 `{ name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }`;
  * @returns {Promise<CryptoKey>} 返回一个 Promise,成功时解析为可用于 `verify` 操作的 `CryptoKey` 对象;
  */
 const importKey = async opts => {

@@ -3,8 +3,8 @@ import { COSEALG } from './cose.js';
 /**
  * 将 X.509 签名算法 OID 映射为 COSE 算法 ID
  * - 查看定义:@see {@link mapX509SignatureAlgToCOSEAlg}
- * - EC2 的 OID：https://oidref.com/1.2.840.10045.4.3
- * - RSA 的 OID：https://oidref.com/1.2.840.113549.1.1
+ * - EC2 的 OID:https://oidref.com/1.2.840.10045.4.3
+ * - RSA 的 OID:https://oidref.com/1.2.840.113549.1.1
  *
  * @param {string} signatureAlgorithm - X.509 签名算法的 OID 字符串
  * @returns {number} 对应的 COSE 算法标识符

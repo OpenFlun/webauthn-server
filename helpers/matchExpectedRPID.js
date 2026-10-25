@@ -21,7 +21,7 @@ class UnexpectedRPIDHash extends Error {
  * 如果未找到匹配项,则抛出 `UnexpectedRPIDHash` 错误;
  * - 查看定义:@see {@link matchExpectedRPID}
  *
- * @param {ArrayBuffer} rpIDHash - 响应中获取的 RP ID 哈希值（原始二进制数据）
+ * @param {ArrayBuffer} rpIDHash - 响应中获取的 RP ID 哈希值(原始二进制数据)
  * @param {string[]} expectedRPIDs - 预期的有效 RP ID 字符串列表
  * @returns {Promise<string>} 解析为匹配成功的 RP ID 字符串
  * @throws {UnexpectedRPIDHash} 当所有预期 RP ID 的哈希均不匹配时抛出错误

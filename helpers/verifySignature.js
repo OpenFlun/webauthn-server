@@ -16,8 +16,8 @@ const _verifySignatureInternals = { stubThis: value => value };
  * @param {Object} opts - 签名验证选项
  * @param {BufferSource} opts.signature - 待验证的签名
  * @param {BufferSource} opts.data - 签名的原始数据
- * @param {BufferSource} [opts.credentialPublicKey] - 凭证公钥（COSE 编码）
- * @param {BufferSource} [opts.x509Certificate] - X.509 证书（DER 格式）
+ * @param {BufferSource} [opts.credentialPublicKey] - 凭证公钥(COSE 编码)
+ * @param {BufferSource} [opts.x509Certificate] - X.509 证书(DER 格式)
  * @param {string} [opts.hashAlgorithm] - 哈希算法覆盖值
  * @returns {Promise<boolean>} 签名有效时返回 true,否则抛出错误
  */

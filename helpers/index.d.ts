@@ -238,7 +238,7 @@ declare module './iso/verifyRSA.js' {
 // ================================= iso模块导出 =================================
 /**
  * ```js
- * // 导出元素说明（按导入顺序排列）：
+ * // 导出元素说明(按导入顺序排列):
  *
  * // 常量
  * const _getWebCryptoInternals             // 内部测试辅助对象,用于模拟和重置缓存
@@ -269,7 +269,7 @@ declare module './iso/verifyRSA.js' {
  * concat()                                // 合并多个 Uint8Array
  * digest()                                // 生成所提供数据的摘要
  * getRandomValues()                       // 用随机字节填充传入的字节数组
- * verify()                                // 使用公钥验证签名（支持 EC2 和 RSA）
+ * verify()                                // 使用公钥验证签名(支持 EC2 和 RSA)
  * mapCoseAlgToWebCryptoAlg()              // 将 COSE 算法标识符转换为 WebCrypto API 所期望的字符串值
  * mapCoseAlgToWebCryptoKeyAlgName()       // 将 COSE 算法标识符转换为 WebCrypto API 所期望的密钥算法字符串
  * unwrapEC2Signature()                    // 从 EC2 签名的 ASN.1 结构中提取 r 和 s
@@ -283,11 +283,14 @@ declare module './iso/verifyRSA.js' {
  * >查看定义:@see
  * - 常量: {@link _getWebCryptoInternals}
  * - 类: {@link MissingWebCrypto}
- * - 函数:{@link getWebCrypto} 、{@link importKey} 、{@link fromBuffer} 、{@link utf8Tob64url} 、{@link toBuffer} 、{@link toBase64} 、
- *{@link b64urlToUtf8} 、{@link isBase64} 、{@link isBase64URL} 、{@link trimPadding} 、{@link decodeFirst} 、{@link encode} 、
- *{@link fromHex} 、{@link utf8Tobytes} 、{@link asciiToBytes} 、{@link toHex} 、{@link toDataView} 、{@link bytesToUtf8} 、
- *{@link areEqual} 、{@link concat} 、{@link digest} 、{@link getRandomValues} 、{@link verify} 、{@link mapCoseAlgToWebCryptoAlg} 、
- *{@link mapCoseAlgToWebCryptoKeyAlgName} 、{@link unwrapEC2Signature} 、{@link verifyEC2} 、{@link verifyOKP} 、{@link verifyRSA}
+ * - 函数:{@link getWebCrypto} 、{@link importKey} 、{@link fromBuffer} 、{@link utf8Tob64url} 、{@link toBuffer} 、
+ *{@link toBase64} 、{@link b64urlToUtf8} 、{@link isBase64} 、{@link isBase64URL} 、{@link trimPadding} 、
+ *{@link decodeFirst} 、{@link encode} 、{@link fromHex} 、{@link utf8Tobytes} 、{@link asciiToBytes} 、
+ *{@link toHex} 、{@link toDataView} 、{@link bytesToUtf8} 、{@link areEqual} 、{@link concat} 、
+ *{@link digest} 、{@link getRandomValues} 、{@link verify} 、{@link mapCoseAlgToWebCryptoAlg} 、
+ *{@link mapCoseAlgToWebCryptoKeyAlgName} 、{@link unwrapEC2Signature} 、{@link verifyEC2} 、
+ *{@link verifyOKP} 、{@link verifyRSA}
+ * {@link verifyEC2} 、{@link verifyOKP} 、{@link verifyRSA}
  */
 declare module './iso/index.js' {
     export * from './iso/getWebCrypto.js';
@@ -308,9 +311,9 @@ declare module './iso/index.js' {
 /**
  * ```js
  * // 文件导出内容
- * getPassportClass();           // 加载 Windows Hello 原生模块（仅 Windows）
- * parseAndValidateClientData(); // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
- * validateResponseStructure();  // 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
+ * getPassportClass();           // 加载 Windows Hello 原生模块(仅 Windows)
+ * parseAndValidateClientData(); // 解析并验证 clientDataJSON(type, challenge, origin, tokenBinding)
+ * validateResponseStructure();  // 校验标准 WebAuthn 凭证的 rawId 和 type(仅标准路径使用)
  * ```
  * >查看定义:@see {@link getPassportClass} 、{@link parseAndValidateClientData}、{@link validateResponseStructure}
  */
@@ -374,7 +377,7 @@ declare module './convertPEMToBytes.js' {
 /**
  * ```js
  * // 文件导出内容:
- * convertX509PublicKeyToCOSE(); // 从 X.509 证书（DER 格式）中提取公钥,并将其转换为 COSE 公钥结构
+ * convertX509PublicKeyToCOSE(); // 从 X.509 证书(DER 格式)中提取公钥,并将其转换为 COSE 公钥结构
  * ```
  * ---
  * >查看定义:@see {@link convertX509PublicKeyToCOSE}
@@ -451,16 +454,18 @@ declare module './cose.js' {
  * decodeAttestationObject();
  * ```
  * ---
- * >查看定义:@see {@link decodeAttestationObject}、{@link AttestationFormat}、{@link AttestationObject}、{@link AttestationStatement}
+ * >查看定义:@see {@link decodeAttestationObject}、{@link AttestationFormat}、{@link AttestationObject}、
+ * {@link AttestationStatement}
  */
 declare module './decodeAttestationObject.js' {
-    export type AttestationFormat = | 'fido-u2f' | 'packed' | 'android-safetynet' | 'android-key' | 'tpm' | 'apple' | 'none';
+    export type AttestationFormat =
+        | 'fido-u2f' | 'packed' | 'android-safetynet' | 'android-key' | 'tpm' | 'apple' | 'none';
     export type AttestationObject = {
         get(key: 'fmt'): AttestationFormat, get(key: 'attStmt'): AttestationStatement, get(key: 'authData'): Uint8Array_;
     };
 
     /**
-     * `AttestationStatement` 是一个 `Map` 实例,但以下键限定了其中可能存在的值范围。
+     * `AttestationStatement` 是一个 `Map` 实例,但以下键限定了其中可能存在的值范围;
      */
     export type AttestationStatement = {
         get(key: 'sig'): Uint8Array_ | undefined, get(key: 'x5c'): Uint8Array_[] | undefined;
@@ -521,7 +526,7 @@ declare module './decodeClientDataJSON.js' {
 /**
  * ```js
  * // 文件导出内容:
- * decodeCredentialPublicKey(); // 将 WebAuthn 凭证公钥（CBOR 编码的 COSE 公钥）解码为 COSEPublicKey Map 对象
+ * decodeCredentialPublicKey(); // 将 WebAuthn 凭证公钥(CBOR 编码的 COSE 公钥)解码为 COSEPublicKey Map 对象
  * ```
  * ---
  * >查看定义:@see {@link decodeCredentialPublicKey}
@@ -547,7 +552,7 @@ declare module './fetch.js' {
 /**
  * ```js
  * // 文件导出内容:
- * generateChallenge(); // 生成一个合适的随机值,用作证明（attestation）或断言（assertion）的挑战值（challenge）
+ * generateChallenge(); // 生成一个合适的随机值,用作证明(attestation)或断言(assertion)的挑战值(challenge)
  * ```
  * ---
  * >查看定义:@see {@link generateChallenge}
@@ -602,7 +607,7 @@ declare module './getCertificateInfo.js' {
 /**
  * ```js
  * // 文件导出内容:
- * isCertRevoked(); // 从证书中获取证书吊销列表（CRL）,并将其中的序列号与 CRL 内已吊销证书的序列号进行比对
+ * isCertRevoked(); // 从证书中获取证书吊销列表(CRL),并将其中的序列号与 CRL 内已吊销证书的序列号进行比对
  * ```
  * ---
  * >查看定义:@see {@link isCertRevoked}
@@ -662,7 +667,7 @@ declare module './matchExpectedRPID.js' {
  * type ParsedAuthenticatorData;
  *
  * // 函数
- * parseAuthenticatorData(); // 解析认证数据（Attestation 中包含的 authData 缓冲区）
+ * parseAuthenticatorData(); // 解析认证数据(Attestation 中包含的 authData 缓冲区)
  * ```
  * ---
  * >查看定义:@see {@link parseAuthenticatorData}、{@link ParsedAuthenticatorData}
@@ -689,7 +694,7 @@ declare module './parseAuthenticatorData.js' {
  * ```js
  * // 文件导出内容:
  * // 类
- * class InvalidBackupFlags{}; // 当解析备份标志（be/bs）时遇到无效组合时抛出的错误;
+ * class InvalidBackupFlags{}; // 当解析备份标志(be/bs)时遇到无效组合时抛出的错误;
  *
  * // 函数
  * parseBackupFlags();         // 解析身份验证器中的第 3 位和第 4 位标志是否匹配;
@@ -783,7 +788,7 @@ declare module './verifySignature.js' {
  * concat()                                // 合并多个 Uint8Array
  * digest()                                // 生成所提供数据的摘要
  * getRandomValues()                       // 用随机字节填充传入的字节数组
- * verify()                                // 使用公钥验证签名（支持 EC2 和 RSA）
+ * verify()                                // 使用公钥验证签名(支持 EC2 和 RSA)
  * mapCoseAlgToWebCryptoAlg()              // 将 COSE 算法标识符转换为 WebCrypto API 所期望的字符串值
  * mapCoseAlgToWebCryptoKeyAlgName()       // 将 COSE 算法标识符转换为 WebCrypto API 所期望的密钥算法字符串
  * unwrapEC2Signature()                    // 从 EC2 签名的 ASN.1 结构中提取 r 和 s
@@ -796,7 +801,7 @@ declare module './verifySignature.js' {
  * convertCertBufferToPEM();     // 将缓冲区转换为 OpenSSL 兼容的 PEM 文本格式
  * convertCOSEtoPKCS();          // 接收 COSE 编码的公钥,并将其转换为 PKCS 密钥
  * convertPEMToBytes();          // 将 PEM 格式的证书转换为字节数组
- * convertX509PublicKeyToCOSE(); // 从 X.509 证书（DER 格式）中提取公钥,并将其转换为 COSE 公钥结构
+ * convertX509PublicKeyToCOSE(); // 从 X.509 证书(DER 格式)中提取公钥,并将其转换为 COSE 公钥结构
  *
  * // COSE 公钥处理
  * // 枚举常量
@@ -808,11 +813,11 @@ declare module './verifySignature.js' {
  * decodeAttestationObject();       // 将 AttestationObject 缓冲区转换为对应的对象
  * decodeAuthenticatorExtensions(); // 将身份验证器扩展数据缓冲区转换为相应的对象
  * decodeClientDataJSON();          // 将身份验证器的 base64url 编码的 clientDataJSON 解码为 JSON
- * decodeCredentialPublicKey();     // 将 WebAuthn 凭证公钥（CBOR 编码的 COSE 公钥）解码为 COSEPublicKey Map 对象
+ * decodeCredentialPublicKey();     // 将 WebAuthn 凭证公钥(CBOR 编码的 COSE 公钥)解码为 COSEPublicKey Map 对象
  *
  * // 证书处理
  * getCertificateInfo();            // 提取 PEM 证书信息
- * isCertRevoked();                 // 从证书中获取证书吊销列表（CRL）,并将其中的序列号与 CRL 内已吊销证书的序列号进行比对
+ * isCertRevoked();                 // 从证书中获取证书吊销列表(CRL),并将其中的序列号与 CRL 内已吊销证书的序列号进行比对
  * validateCertificatePath();       // 遍历 PEM 证书数组,确保形成有效的证书链
  * validateExtFIDOGenCEAAGUID();    // 查找 FIDO Gen CE AAGUID 证书扩展并比对 AAGUID
  * class InvalidSubjectAndIssuer{}; // 当证书链中某一证书的颁发者无法为下一证书签名,或根证书不自签名时,则抛出错误;
@@ -820,7 +825,7 @@ declare module './verifySignature.js' {
  * // 认证器数据解析
  * parseAuthenticatorData();       // 解析 Attestation 中包含的 authData 缓冲区,使其变得可读
  * parseBackupFlags();             // 解析身份验证器中的第 3 位和第 4 位,返回匹配标志
- * class InvalidBackupFlags{};     // 当解析备份标志（be/bs）时遇到无效组合时抛出的错误;
+ * class InvalidBackupFlags{};     // 当解析备份标志(be/bs)时遇到无效组合时抛出的错误;
  *
  * // 签名与校验
  * verifySignature();              // 验证身份验证器的签名
@@ -828,9 +833,9 @@ declare module './verifySignature.js' {
  * mapX509SignatureAlgToCOSEAlg(); // 将 X.509 签名算法 OID 映射到 COSE 算法 ID
  *
  * // 工具与辅助
- * getPassportClass();           // 加载 Windows Hello 原生模块（仅 Windows）
- * parseAndValidateClientData(); // 解析并验证 clientDataJSON（type, challenge, origin, tokenBinding）
- * validateResponseStructure();  // 校验标准 WebAuthn 凭证的 rawId 和 type（仅标准路径使用）
+ * getPassportClass();           // 加载 Windows Hello 原生模块(仅 Windows)
+ * parseAndValidateClientData(); // 解析并验证 clientDataJSON(type, challenge, origin, tokenBinding)
+ * validateResponseStructure();  // 校验标准 WebAuthn 凭证的 rawId 和 type(仅标准路径使用)
  * fetch();                         // 一个用于通过标准 fetch 请求数据的简单方法,可在多种运行时环境中工作
  * generateChallenge();             // 生成一个合适的随机值,用作证明或断言的挑战值
  * generateUserID();                // 生成一个适合作为用户 ID 的随机值
@@ -843,20 +848,21 @@ declare module './verifySignature.js' {
  * {@link getWebCrypto} 、{@link importKey}
  * - 编解码与转换:{@link fromBuffer} 、{@link utf8Tob64url} 、{@link toBuffer} 、{@link toBase64} 、{@link b64urlToUtf8} 、
  * {@link isBase64} 、{@link isBase64URL} 、{@link trimPadding} 、{@link decodeFirst} 、{@link encode} 、{@link fromHex} 、
- * {@link utf8Tobytes} 、{@link asciiToBytes} 、{@link toHex} 、{@link toDataView} 、{@link bytesToUtf8} 、{@link areEqual} 、
- * {@link concat} 、{@link digest} 、{@link getRandomValues} 、{@link verify} 、{@link mapCoseAlgToWebCryptoAlg} 、
- * {@link mapCoseAlgToWebCryptoKeyAlgName} 、{@link unwrapEC2Signature} 、{@link verifyEC2} 、{@link verifyOKP} 、{@link verifyRSA}
+ * {@link utf8Tobytes} 、{@link asciiToBytes} 、{@link toHex} 、{@link toDataView} 、{@link bytesToUtf8} 、
+ * {@link areEqual} 、{@link concat} 、{@link digest} 、{@link getRandomValues} 、{@link verify} 、
+ * {@link mapCoseAlgToWebCryptoAlg} 、{@link mapCoseAlgToWebCryptoKeyAlgName} 、{@link unwrapEC2Signature} 、
+ * {@link verifyEC2} 、{@link verifyOKP} 、{@link verifyRSA}
  * - 转换函数:{@link convertAAGUIDToString}、{@link convertCertBufferToPEM}、{@link convertCOSEtoPKCS}、
  *  {@link convertPEMToBytes}、{@link convertX509PublicKeyToCOSE}
  * - COSE 公钥 {@link COSEKEYS}、{@link COSEKTY}、{@link COSECRV}、{@link COSEALG}、{@link isCOSEPublicKeyOKP}、
  * {@link isCOSEPublicKeyEC2}、{@link isCOSEPublicKeyRSA}、{@link isCOSEKty}、{@link isCOSECrv}、{@link isCOSEAlg}
- * - 解码与解析：{@link decodeAttestationObject}、{@link decodeAuthenticatorExtensions}、{@link decodeClientDataJSON}、
+ * - 解码与解析:{@link decodeAttestationObject}、{@link decodeAuthenticatorExtensions}、{@link decodeClientDataJSON}、
  * {@link decodeCredentialPublicKey}
- * - 证书处理：{@link getCertificateInfo}、{@link isCertRevoked}、{@link validateCertificatePath}、
+ * - 证书处理:{@link getCertificateInfo}、{@link isCertRevoked}、{@link validateCertificatePath}、
  * {@link validateExtFIDOGenCEAAGUID}、{@link InvalidSubjectAndIssuer}
- * - 认证器数据解析：{@link parseAuthenticatorData}、{@link parseBackupFlags}、 {@link InvalidBackupFlags}
- * - 签名与校验：{@link verifySignature}、{@link toHash}、{@link mapX509SignatureAlgToCOSEAlg}
- * - 工具与辅助：{@link getPassportClass}、{@link parseAndValidateClientData}、{@link validateResponseStructure}、
+ * - 认证器数据解析:{@link parseAuthenticatorData}、{@link parseBackupFlags}、 {@link InvalidBackupFlags}
+ * - 签名与校验:{@link verifySignature}、{@link toHash}、{@link mapX509SignatureAlgToCOSEAlg}
+ * - 工具与辅助:{@link getPassportClass}、{@link parseAndValidateClientData}、{@link validateResponseStructure}、
  * {@link fetch}、{@link generateChallenge}、{@link generateUserID}、
  * {@link matchExpectedRPID}、{@link getLogger}、{@link UnexpectedRPIDHash}
  */
