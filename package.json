@@ -40,6 +40,10 @@
     "type": "git",
     "url": "git+https://github.com/OpenFlun/webauthn-server.git"
   },
+  "gitee": {
+    "type": "git",
+    "url": "git+https://gitee.com/openflun/webauthn-server.git"
+  },
   "homepage": "https://github.com/OpenFlun/webauthn-server#readme",
   "bugs": {
     "url": "https://github.com/OpenFlun/webauthn-server/issues"

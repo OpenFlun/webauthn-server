@@ -17,7 +17,7 @@
 ## 特性
 
 - **WebAuthn 注册与认证**
-  提供 `generateRegistrationOptions` / `verifyRegistrationResponse` 和 `generateAuthenticationOptions` / 
+  提供 `generateRegistrationOptions` / `verifyRegistrationResponse` 和 `generateAuthenticationOptions` /
   `verifyAuthenticationResponse` 两对核心方法,完整实现 WebAuthn 后端逻辑;
 
 - **全格式证明支持**
@@ -64,7 +64,7 @@
 
 ### 允许安装脚本执行
 
-本包在安装时可能触发某些依赖包的自动脚本(如 `postinstall` 等);如果你的 npm 全局配置或项目配置禁止了脚本执行(例如设置了 
+本包在安装时可能触发某些依赖包的自动脚本(如 `postinstall` 等);如果你的 npm 全局配置或项目配置禁止了脚本执行(例如设置了
 `ignore-scripts=true`),可能会导致安装不完整或运行时异常;
 
 推荐在项目根目录的 `package.json` 中添加 `allowScripts` 字段,显式放行本包及其依赖的脚本:
@@ -102,23 +102,23 @@ npm install @flun/webauthn-server
 | 方法                                   | 描述                                                 |
 | -------------------------------------- | ---------------------------------------------------- |
 | `generateRegistrationOptions(options)` | 生成用于 `navigator.credentials.create()` 的选项参数 |
-| `verifyRegistrationResponse(options)`  | 验证客户端返回的注册响应,返回验证结果及凭证信息     |
+| `verifyRegistrationResponse(options)`  | 验证客户端返回的注册响应,返回验证结果及凭证信息      |
 
 ### 认证相关
 
-| 方法                                     | 描述                                                 |
-| ---------------------------------------- | ---------------------------------------------------- |
-| `generateAuthenticationOptions(options)` | 生成用于 `navigator.credentials.get()` 的选项参数    |
+| 方法                                     | 描述                                                |
+| ---------------------------------------- | --------------------------------------------------- |
+| `generateAuthenticationOptions(options)` | 生成用于 `navigator.credentials.get()` 的选项参数   |
 | `verifyAuthenticationResponse(options)`  | 验证客户端返回的认证响应,返回验证结果及更新的计数器 |
 
 ### 元数据与设置服务
 
-| 导出项                              | 描述                                                               |
-| ----------------------------------- | ------------------------------------------------------------------ |
+| 导出项                              | 描述                                                             |
+| ----------------------------------- | ---------------------------------------------------------------- |
 | `MetadataService`                   | 协调 FIDO 元数据交互的基础服务实例(`BaseMetadataService` 的实例) |
-| `SettingsService`                   | 管理各类 attestation 声明格式根证书的服务实例                      |
-| `supportedCOSEAlgorithmIdentifiers` | 支持的加密算法标识符数组                                           |
-| `AlgSign`                           | 支持的签名算法数组                                                 |
+| `SettingsService`                   | 管理各类 attestation 声明格式根证书的服务实例                    |
+| `supportedCOSEAlgorithmIdentifiers` | 支持的加密算法标识符数组                                         |
+| `AlgSign`                           | 支持的签名算法数组                                               |
 
 ### 辅助工具函数(`helpers` 模块)
 
@@ -175,7 +175,7 @@ npm install @flun/webauthn-server
 | ------------------------------------ | ----------------------------- |
 | `decodeAttestationObject(buf)`       | 解析 attestationObject 缓冲区 |
 | `decodeClientDataJSON(base64url)`    | 解析 clientDataJSON           |
-| `parseAuthenticatorData(authData)`   | 解析 authData,返回可读结构   |
+| `parseAuthenticatorData(authData)`   | 解析 authData,返回可读结构    |
 | `parseBackupFlags(flags)`            | 解析备份状态标志 (BE/BS)      |
 | `decodeAuthenticatorExtensions(buf)` | 解码扩展数据                  |
 | `InvalidBackupFlags`                 | 备份标志无效时抛出的错误类    |
@@ -186,7 +186,7 @@ npm install @flun/webauthn-server
 | ------------------------------------------------- | --------------------------------- |
 | `verifySignature({ signature, data, publicKey })` | 通用签名验证入口                  |
 | `verifyEC2()`, `verifyOKP()`, `verifyRSA()`       | 特定算法签名验证                  |
-| `toHash(data, algorithm?)`                        | 计算哈希摘要(默认 SHA-256)      |
+| `toHash(data, algorithm?)`                        | 计算哈希摘要(默认 SHA-256)        |
 | `mapX509SignatureAlgToCOSEAlg(oid)`               | X.509 签名算法 OID → COSE 算法 ID |
 
 #### 通用工具
@@ -380,6 +380,7 @@ ISC © [flun](https://github.com/OpenFlun)
 ## 贡献
 
 - [GitHub 仓库](https://github.com/OpenFlun/webauthn-server)
+- [gitee 仓库](https://gitee.com/openflun/webauthn-server)
 - [npm 包页面](https://www.npmjs.com/package/@flun/webauthn-server)
 - [配套前端库 @flun/webauthn-browser](https://www.npmjs.com/package/@flun/webauthn-browser)
 
