@@ -1,4 +1,4 @@
-import { utf8Tobytes, digest } from './iso/index.js';
+import { digest, utf8Tobytes } from './iso/index.js';
 
 /**
  * 返回给定数据的哈希摘要,如果提供了算法参数,则使用指定的算法,默认使用 SHA-256

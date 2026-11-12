@@ -1,6 +1,6 @@
 import { verify } from './iso/index.js';
-import { decodeCredentialPublicKey } from './decodeCredentialPublicKey.js';
 import { convertX509PublicKeyToCOSE } from './convertX509PublicKeyToCOSE.js';
+import { decodeCredentialPublicKey } from './decodeCredentialPublicKey.js';
 
 /**
  * 用于在测试时模拟返回值

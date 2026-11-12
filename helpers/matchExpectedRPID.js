@@ -1,5 +1,5 @@
+import { areEqual, asciiToBytes } from './iso/index.js';
 import { toHash } from './toHash.js';
-import { asciiToBytes, areEqual } from './iso/index.js';
 
 /**
  * 当响应中的 RP ID 哈希值与所有预期的 RP ID 均不匹配时抛出的错误;

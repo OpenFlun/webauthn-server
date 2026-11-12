@@ -1,7 +1,7 @@
 import { AsnParser } from '@peculiar/asn1-schema';
 import { Certificate } from '@peculiar/asn1-x509';
 import {
-    concat, areEqual, convertCertBufferToPEM, convertCOSEtoPKCS, toHash, validateCertificatePath
+    areEqual, concat, convertCertBufferToPEM, convertCOSEtoPKCS, toHash, validateCertificatePath
 } from '../../helpers/index.js';
 
 /**

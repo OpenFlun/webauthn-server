@@ -1,9 +1,8 @@
 import {
-    fromBuffer, toBuffer, b64urlToUtf8, utf8Tobytes, bytesToUtf8, concat, convertCertBufferToPEM,
-    getCertificateInfo, toHash,
-    validateCertificatePath, verifySignature
+    b64urlToUtf8, bytesToUtf8, concat, convertCertBufferToPEM, fromBuffer, getCertificateInfo, toBuffer, toHash,
+    utf8Tobytes, validateCertificatePath, verifySignature
 } from '../../helpers/index.js';
-import { verifyAttestationWithMetadata, MetadataService } from '../../metadata/metadata.js';
+import { MetadataService, verifyAttestationWithMetadata } from '../../metadata/metadata.js';
 
 /**
  * 验证格式为 'android-safetynet' 的 attestation 响应

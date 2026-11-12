@@ -1,6 +1,6 @@
 import { X509Certificate } from '@peculiar/x509';
-import { isCertRevoked } from './isCertRevoked.js';
 import { getWebCrypto } from './iso/getWebCrypto.js';
+import { isCertRevoked } from './isCertRevoked.js';
 
 /**
  * 当证书链中某一证书的颁发者无法为下一证书签名,或根证书不自签名时抛出的内部错误;

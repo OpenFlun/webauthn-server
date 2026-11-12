@@ -1,13 +1,13 @@
 import { AsnParser } from '@peculiar/asn1-schema';
 import {
-    Certificate, id_ce_extKeyUsage, id_ce_subjectAltName, SubjectAlternativeName, ExtendedKeyUsage
+    id_ce_extKeyUsage, id_ce_subjectAltName, Certificate, ExtendedKeyUsage, SubjectAlternativeName
 } from '@peculiar/asn1-x509';
 import {
-    areEqual, concat, convertCertBufferToPEM, COSEKEYS, COSEALG, isCOSEAlg, isCOSEPublicKeyRSA, isCOSEPublicKeyEC2,
-    decodeCredentialPublicKey, getCertificateInfo, toHash, validateCertificatePath,
-    validateExtFIDOGenCEAAGUID, verifySignature
+    COSEALG, COSEKEYS, areEqual, concat, convertCertBufferToPEM, decodeCredentialPublicKey, getCertificateInfo,
+    isCOSEAlg, isCOSEPublicKeyEC2, isCOSEPublicKeyRSA, toHash, validateCertificatePath, validateExtFIDOGenCEAAGUID,
+    verifySignature
 } from '../../helpers/index.js';
-import { verifyAttestationWithMetadata, MetadataService } from '../../metadata/metadata.js';
+import { MetadataService, verifyAttestationWithMetadata } from '../../metadata/metadata.js';
 import { TPM_ECC_CURVE_COSE_CRV_MAP, TPM_MANUFACTURERS, parseCertInfo, parsePubArea } from './tpm/index.js';
 
 /**

@@ -1,16 +1,16 @@
 /**
  * WebAuthn认证模块 主要功能:
  * ```js
- * generateAuthenticationOptions();                // 生成用于身份验证器认证的参数
- * verifyAuthenticationResponse();                 // 验证用户是否合法完成了认证流程
- * generateRegistrationOptions();                  // 生成用于身份验证器注册的参数
- * verifyRegistrationResponse();                   // 验证用户是否合法完成了注册流程
- * class BaseMetadataService{};                    // 下载和解析 BLOB,并支持按需请求和缓存各个元数据声明;
+ * const AlgSign=[];                               // 支持的签名算法数组
  * const MetadataService= new BaseMetadataService; // 用于协调与 FIDO 元数据交互的基础服务;
- * class BaseSettingsService{};                    // 用于管理各类 attestation 语句格式的根证书;
  * const SettingsService= new BaseSettingsService; // 用于为所有支持的证明声明格式指定可接受的根证书;
  * const supportedCOSEAlgorithmIdentifiers=[];     // 支持的加密算法标识符
- * const AlgSign=[];                               // 支持的签名算法数组
+ * generateAuthenticationOptions();                // 生成用于身份验证器认证的参数
+ * generateRegistrationOptions();                  // 生成用于身份验证器注册的参数
+ * verifyAuthenticationResponse();                 // 验证用户是否合法完成了认证流程
+ * verifyRegistrationResponse();                   // 验证用户是否合法完成了注册流程
+ * class BaseMetadataService{};                    // 下载和解析 BLOB,并支持按需请求和缓存各个元数据声明;
+ * class BaseSettingsService{};                    // 用于管理各类 attestation 语句格式的根证书;
  * ```
  * ---
  *
@@ -236,15 +236,15 @@
  * `startAuthentication` 支持 `{ optionsJSON, useBrowserAutofill?, verifyBrowserAutofillInput? }` 参数;
  * `browserSupportsWebAuthnAutofill` 依赖 `PublicKeyCredential.isConditionalMediationAvailable`;
  * ```js
+ * base64URLStringToBuffer(base64url);    // 将 Base64URL 字符串转换为 `ArrayBuffer`
  * browserSupportsWebAuthn();             // 检测当前浏览器是否支持 WebAuthn
  * browserSupportsWebAuthnAutofill();     // 检测浏览器是否支持 WebAuthn 条件式自动填充
+ * bufferToBase64URLString(buffer);       // 将 `ArrayBuffer` 转换为 Base64URL 字符串
  * platformAuthenticatorIsAvailable();    // 检测平台身份验证器(如 Windows Hello、指纹传感器)是否可用
- * startRegistration(options);            // 发起注册流程,参数 `{ optionsJSON, useAutoRegister? }`
  * startAuthentication(options);          // 发起认证流程
+ * startRegistration(options);            // 发起注册流程,参数 `{ optionsJSON, useAutoRegister? }`
  * WebAuthnAbortService.cancelCeremony(); // 手动取消正在进行的注册/认证流程
  * class WebAuthnError{};                 // 自定义错误类,包含 `code` 属性,用于区分不同类型的 WebAuthn 错误
- * base64URLStringToBuffer(base64url);    // 将 Base64URL 字符串转换为 `ArrayBuffer`
- * bufferToBase64URLString(buffer);       // 将 `ArrayBuffer` 转换为 Base64URL 字符串
  * ```
  * 使用示例:
  * ```js
@@ -272,5 +272,5 @@
  */
 declare module './index.js' { }
 export * from './authentication/index.js';
-export { AlgSign, BaseMetadataService, MetadataService, BaseSettingsService, SettingsService } from './metadata/index.js';
+export { AlgSign, MetadataService, SettingsService, BaseMetadataService, BaseSettingsService } from './metadata/index.js';
 export * from './registration/index.js';

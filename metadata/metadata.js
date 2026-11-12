@@ -1,9 +1,7 @@
 import {
-    b64urlToUtf8, toBuffer, utf8Tobytes, verifyEC2, verifyRSA, convertAAGUIDToString,
-    convertCertBufferToPEM, convertPEMToBytes,
-    convertX509PublicKeyToCOSE, COSEKEYS, COSEKTY, COSEALG, isCOSEPublicKeyEC2,
-    isCOSEPublicKeyRSA, decodeCredentialPublicKey,
-    fetch, getLogger, validateCertificatePath
+    COSEALG, COSEKEYS, COSEKTY, b64urlToUtf8, convertAAGUIDToString, convertCertBufferToPEM, convertPEMToBytes,
+    convertX509PublicKeyToCOSE, decodeCredentialPublicKey, fetch, getLogger, isCOSEPublicKeyEC2, isCOSEPublicKeyRSA,
+    toBuffer, utf8Tobytes, validateCertificatePath, verifyEC2, verifyRSA
 } from '../helpers/index.js';
 
 import { SettingsService } from './settings.js';
@@ -44,27 +42,6 @@ const AlgSign = [
     'ed25519_eddsa_sha512_raw',     // Ed25519曲线,EdDSA,SHA-512,原始格式
 ];
 
-// ================================= JWT处理 =================================
-/**
- * 将 JWT 解析为 JavaScript 友好的数据结构
- * - 查看定义:@see {@link parseJWT}
- * @param {string} jwt - 原始的 JWT 字符串(三段式 base64url 编码)
- * @returns {[Record<string, unknown>, Record<string, unknown>, string]}
- *   返回一个元组:
- *   - 索引 0: 解码后的 JWT 头部(标准 JSON 对象)
- *   - 索引 1: 解码后的 JWT 载荷(标准 JSON 对象)
- *   - 索引 2: 原始签名部分(base64url 字符串)
- */
-const parseJWT = jwt => {
-    const parts = jwt.split('.');
-    return [
-        JSON.parse(b64urlToUtf8(parts[0])),
-        JSON.parse(b64urlToUtf8(parts[1])),
-        parts[2]
-    ];
-};
-
-// ================================= 身份验证器匹配处理 =================================
 /**
  * 将 ALG_SIGN 值转换为 COSE 信息
  *
@@ -88,6 +65,35 @@ const algSignToCOSEInfoMap = {
     secp384r1_ecdsa_sha384_raw: { kty: 2, alg: -35, crv: 2 },
     secp512r1_ecdsa_sha256_raw: { kty: 2, alg: -36, crv: 3 },
     ed25519_eddsa_sha512_raw: { kty: 1, alg: -8, crv: 6 },
+};
+
+/**
+ * 一个 `CachedMDS` 实例,不会触发刷新关联条目 BLOB 的尝试
+ * @type {{ url: string, no: number, nextUpdate: Date }}
+ */
+const NonRefreshingMDS = { url: '', no: 0, nextUpdate: new Date(0) },
+    defaultURLMDS = 'https://mds.fidoalliance.org/',// v3
+    /** @type {{ DISABLED: 0, REFRESHING: 1, READY: 2 }} */
+    SERVICE_STATE = { DISABLED: 0, REFRESHING: 1, READY: 2 },
+    log = getLogger('MetadataService');
+
+/**
+ * 将 JWT 解析为 JavaScript 友好的数据结构
+ * - 查看定义:@see {@link parseJWT}
+ * @param {string} jwt - 原始的 JWT 字符串(三段式 base64url 编码)
+ * @returns {[Record<string, unknown>, Record<string, unknown>, string]}
+ *   返回一个元组:
+ *   - 索引 0: 解码后的 JWT 头部(标准 JSON 对象)
+ *   - 索引 1: 解码后的 JWT 载荷(标准 JSON 对象)
+ *   - 索引 2: 原始签名部分(base64url 字符串)
+ */
+const parseJWT = jwt => {
+    const parts = jwt.split('.');
+    return [
+        JSON.parse(b64urlToUtf8(parts[0])),
+        JSON.parse(b64urlToUtf8(parts[1])),
+        parts[2]
+    ];
 };
 
 /**
@@ -218,7 +224,6 @@ const verifyAttestationWithMetadata = async ({ statement, credentialPublicKey, x
     return true;
 };
 
-// ================================= JWT签名验证处理 =================================
 /**
  * 针对 FIDO MDS JWT 的轻量级验证,支持 EC2 和 RSA 算法;
  * - 查看定义:@see {@link verifyJWT}
@@ -244,7 +249,6 @@ const verifyJWT = (jwt, leafCert) => {
     throw new Error(`此方法不支持使用 kty 为 ${kty} 的公钥进行 JWT 验证`);
 };
 
-// ================================= BLOB验证处理 =================================
 /**
  * 对符合 [FIDO 元数据服务 (MDS)](https://fidoalliance.org/metadata/) 规范的 BLOB 进行真实性与完整性验证,
  * 并提取其中包含的 FIDO2 元数据声明,此方法将发起网络请求以执行 CRL 等检查;
@@ -286,18 +290,7 @@ const verifyMDSBlob = async blob => {
     return { statements, parsedNextUpdate, payload };
 };
 
-
 // ================================= MetadataService实现 =================================
-/**
- * 一个 `CachedMDS` 实例,不会触发刷新关联条目 BLOB 的尝试
- * @type {{ url: string, no: number, nextUpdate: Date }}
- */
-const NonRefreshingMDS = { url: '', no: 0, nextUpdate: new Date(0) },
-    defaultURLMDS = 'https://mds.fidoalliance.org/',// v3
-    /** @type {{ DISABLED: 0, REFRESHING: 1, READY: 2 }} */
-    SERVICE_STATE = { DISABLED: 0, REFRESHING: 1, READY: 2 },
-    log = getLogger('MetadataService');
-
 /**
  * `MetadataService` 的一个实现,能够下载和解析 BLOB,并支持按需请求和缓存各个元数据声明;
  * - 查看定义:@see {@link BaseMetadataService}、
@@ -539,6 +532,6 @@ class BaseMetadataService {
 const MetadataService = new BaseMetadataService();
 
 export {
-    AlgSign, parseJWT, verifyAttestationWithMetadata, algSignToCOSEInfoMap, verifyJWT, verifyMDSBlob,
-    BaseMetadataService, MetadataService
+    AlgSign, algSignToCOSEInfoMap, MetadataService, parseJWT, verifyAttestationWithMetadata, verifyJWT,
+    verifyMDSBlob, BaseMetadataService
 };

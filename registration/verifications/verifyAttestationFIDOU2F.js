@@ -1,5 +1,6 @@
-import { concat, convertCOSEtoPKCS, convertCertBufferToPEM, COSEALG, toHex, validateCertificatePath, verifySignature }
-    from '../../helpers/index.js';
+import {
+    COSEALG, concat, convertCertBufferToPEM, convertCOSEtoPKCS, toHex, validateCertificatePath, verifySignature
+} from '../../helpers/index.js';
 
 /**
  * 验证格式为 'fido-u2f' 的认证声明

@@ -1,5 +1,5 @@
-import { decodeAuthenticatorExtensions, } from './decodeAuthenticatorExtensions.js';
-import { toDataView, fromHex, areEqual, decodeFirst, encode } from './iso/index.js';
+import { areEqual, decodeFirst, encode, fromHex, toDataView } from './iso/index.js';
+import { decodeAuthenticatorExtensions } from './decodeAuthenticatorExtensions.js';
 
 /**
  * 便于在测试时对返回值进行桩(stub)操作

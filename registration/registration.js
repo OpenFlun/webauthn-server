@@ -1,72 +1,70 @@
 import {
-    fromBuffer, isBase64URL, trimPadding, utf8Tobytes, toBuffer, generateChallenge, generateUserID,
-    decodeAttestationObject,
-    parseAuthenticatorData, decodeCredentialPublicKey, COSEKEYS, getPassportClass, parseAndValidateClientData,
-    validateResponseStructure, convertAAGUIDToString, parseBackupFlags, matchExpectedRPID, toHash
+    COSEKEYS, convertAAGUIDToString, decodeAttestationObject, decodeCredentialPublicKey, fromBuffer, generateChallenge,
+    generateUserID, getPassportClass, isBase64URL, matchExpectedRPID, parseAndValidateClientData,
+    parseAuthenticatorData, parseBackupFlags, toBuffer, toHash, trimPadding, utf8Tobytes, validateResponseStructure
 } from '../helpers/index.js';
 import { SettingsService } from '../metadata/settings.js';
 import {
-    verifyAttestationFIDOU2F, verifyAttestationPacked, verifyAttestationAndroidSafetyNet,
-    verifyAttestationAndroidKey, verifyAttestationApple, verifyAttestationTPM
+    verifyAttestationAndroidKey, verifyAttestationAndroidSafetyNet, verifyAttestationApple,
+    verifyAttestationFIDOU2F, verifyAttestationPacked, verifyAttestationTPM
 } from './verifications/index.js';
 
 /**
  * 支持的加密算法标识符(COSE 算法 ID)
+ * - 查看定义:@see {@link supportedCOSEAlgorithmIdentifiers}
  * - 参考: https://w3c.github.io/webauthn/#sctn-alg-identifier
  * - 参考: https://www.iana.org/assignments/cose/cose.xhtml#algorithms
  * @type {number[]}
  */
-const supportedCOSEAlgorithmIdentifiers = [-8, -7, -36, -37, -38, -39, -257, -258, -259, -65535];
+const supportedCOSEAlgorithmIdentifiers = [-8, -7, -36, -37, -38, -39, -257, -258, -259, -65535],
+    /**
+     * 默认的身份验证器选择标准(符合 WebAuthn L2 规范)
+     * @type {{ residentKey: ResidentKeyRequirement, userVerification: UserVerificationRequirement }}
+     */
+    defaultAuthenticatorSelection = { residentKey: 'preferred', userVerification: 'preferred' },
 
-/**
- * 默认的身份验证器选择标准(符合 WebAuthn L2 规范)
- * @type {{ residentKey: ResidentKeyRequirement, userVerification: UserVerificationRequirement }}
- */
-const defaultAuthenticatorSelection = { residentKey: 'preferred', userVerification: 'preferred' };
+    /**
+     * 默认推荐的算法 ID 列表(优先使用 EdDSA, ES256, RS256)
+     * @type {number[]}
+     */
+    defaultSupportedAlgorithmIDs = [-8, -7, -257],
+    /**
+     * 使用 Windows Hello(Passport)进行原生注册,会直接在本地创建账户并获取公钥;
+     * 仅在 Windows 环境且 `response.native === true` 时被调用;
+     * @ignore
+     * @param {Object} options - 内部参数
+     * @param {Object} options.response - 浏览器返回的 Credential 对象(需包含 id)
+     * @param {string|Buffer} options.expectedChallenge - 预期的挑战值(仅用于一致性检查)
+     * @param {string} options.expectedOrigin - 预期的来源
+     * @param {string} options.expectedRPID - 预期的 RP ID
+     * @param {Function} options.PassportClass - 由 `getPassportClass` 返回的 Passport 类构造函数
+     * @returns {Promise<{ verified: true, registrationInfo: Object }>}
+     * @throws {Error} 如果账户创建失败或公钥获取失败
+     */
+    verifyRegistrationResponseNative = async options => {
+        const { response, expectedChallenge, expectedOrigin, expectedRPID, PassportClass } = options,
+            accountId = response.id, passport = new PassportClass(accountId);
 
-/**
- * 默认推荐的算法 ID 列表(优先使用 EdDSA, ES256, RS256)
- * @type {number[]}
- */
-const defaultSupportedAlgorithmIDs = [-8, -7, -257];
-
-/**
- * 使用 Windows Hello(Passport)进行原生注册,会直接在本地创建账户并获取公钥;
- * 仅在 Windows 环境且 `response.native === true` 时被调用;
- * @ignore
- * @param {Object} options - 内部参数
- * @param {Object} options.response - 浏览器返回的 Credential 对象(需包含 id)
- * @param {string|Buffer} options.expectedChallenge - 预期的挑战值(仅用于一致性检查)
- * @param {string} options.expectedOrigin - 预期的来源
- * @param {string} options.expectedRPID - 预期的 RP ID
- * @param {Function} options.PassportClass - 由 `getPassportClass` 返回的 Passport 类构造函数
- * @returns {Promise<{ verified: true, registrationInfo: Object }>}
- * @throws {Error} 如果账户创建失败或公钥获取失败
- */
-const verifyRegistrationResponseNative = async options => {
-    const { response, expectedChallenge, expectedOrigin, expectedRPID, PassportClass } = options,
-        accountId = response.id, passport = new PassportClass(accountId);
-
-    await passport.createAccount(0); // 0 = ReplaceExisting
-    if (!passport.accountExists) throw new Error('账户创建失败');
-    const publicKey = await passport.getPublicKey(1); // 1 = Pkcs1RsaPublicKey
-    return {
-        verified: true,
-        registrationInfo: {
-            fmt: 'none',
-            aaguid: '00000000-0000-0000-0000-000000000000',
-            credentialType: 'public-key',
-            credential: { id: accountId, publicKey, counter: 0, transports: [] },
-            attestationObject: Buffer.from([]),
-            userVerified: true,
-            credentialDeviceType: 'multiDevice',
-            credentialBackedUp: false,
-            origin: expectedOrigin,
-            rpID: expectedRPID,
-            authenticatorExtensionResults: {}
-        },
+        await passport.createAccount(0); // 0 = ReplaceExisting
+        if (!passport.accountExists) throw new Error('账户创建失败');
+        const publicKey = await passport.getPublicKey(1); // 1 = Pkcs1RsaPublicKey
+        return {
+            verified: true,
+            registrationInfo: {
+                fmt: 'none',
+                aaguid: '00000000-0000-0000-0000-000000000000',
+                credentialType: 'public-key',
+                credential: { id: accountId, publicKey, counter: 0, transports: [] },
+                attestationObject: Buffer.from([]),
+                userVerified: true,
+                credentialDeviceType: 'multiDevice',
+                credentialBackedUp: false,
+                origin: expectedOrigin,
+                rpID: expectedRPID,
+                authenticatorExtensionResults: {}
+            },
+        };
     };
-};
 
 /**
  * 生成用于 WebAuthn 注册的参数,可直接传递给 `navigator.credentials.create()`

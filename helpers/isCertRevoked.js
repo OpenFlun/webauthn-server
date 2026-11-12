@@ -1,6 +1,5 @@
 import {
-    AuthorityKeyIdentifierExtension, CRLDistributionPointsExtension,
-    SubjectKeyIdentifierExtension, X509Crl
+    AuthorityKeyIdentifierExtension, CRLDistributionPointsExtension, SubjectKeyIdentifierExtension, X509Crl
 } from '@peculiar/x509';
 import { fetch } from './fetch.js';
 

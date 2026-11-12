@@ -1,10 +1,10 @@
+import { id_ce_keyDescription, KeyDescription } from '@peculiar/asn1-android';
 import { AsnParser } from '@peculiar/asn1-schema';
 import { Certificate } from '@peculiar/asn1-x509';
-import { id_ce_keyDescription, KeyDescription } from '@peculiar/asn1-android';
 import {
     areEqual, concat, convertCertBufferToPEM, convertCOSEtoPKCS, isCOSEAlg, validateCertificatePath, verifySignature
 } from '../../helpers/index.js';
-import { verifyAttestationWithMetadata, MetadataService } from '../../metadata/metadata.js';
+import { MetadataService, verifyAttestationWithMetadata } from '../../metadata/metadata.js';
 
 /**
  * 验证格式为 'android-key' 的证明响应

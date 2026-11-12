@@ -1,5 +1,5 @@
-import { TPM_ALG, TPM_ST, TPM_ECC_CURVE } from './constants.js';
-import { toDataView, concat } from '../../../helpers/index.js';
+import { concat, toDataView } from '../../../helpers/index.js';
+import { TPM_ALG, TPM_ECC_CURVE, TPM_ST } from './constants.js';
 
 // ================================= parseCertInfo函数 =================================
 /**

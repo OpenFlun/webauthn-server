@@ -1,8 +1,8 @@
 import {
-    concat, convertCertBufferToPEM, isCOSEAlg, getCertificateInfo, validateCertificatePath, validateExtFIDOGenCEAAGUID,
-    verifySignature
+    concat, convertCertBufferToPEM, getCertificateInfo, isCOSEAlg, validateCertificatePath,
+    validateExtFIDOGenCEAAGUID, verifySignature
 } from '../../helpers/index.js';
-import { verifyAttestationWithMetadata, MetadataService } from '../../metadata/metadata.js';
+import { MetadataService, verifyAttestationWithMetadata } from '../../metadata/metadata.js';
 
 /**
  * 验证格式为 'packed' 的 attestation 响应
