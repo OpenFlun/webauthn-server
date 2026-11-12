@@ -5,7 +5,7 @@ let nativeLoaded = false, PassportClass = null;
 const require = createRequire(import.meta.url);
 /**
  * 加载 Windows Hello 原生模块(仅 Windows)
- * - 查看定义:@see {@link getPassportClass}
+ * >查看定义:@see {@link getPassportClass}
  * @param {string} logPrefix - 日志前缀,默认 '[common]'
  * @returns {object|null} Passport 类或 null
  */
@@ -26,7 +26,7 @@ const getPassportClass = (logPrefix = '[common]') => {
 
 /**
  * 解析并验证 clientDataJSON(type, challenge, origin, tokenBinding)
- * - 查看定义:@see {@link parseAndValidateClientData}
+ * >查看定义:@see {@link parseAndValidateClientData}
  * @param {string} clientDataJSON - base64url 编码的 clientDataJSON 字符串
  * @param {string|string[]} expectedType - 期望的 type 值或数组
  * @param {string|Function} expectedChallenge - 期望的 challenge 字符串或异步验证函数
@@ -66,9 +66,10 @@ const parseAndValidateClientData = async (clientDataJSON, expectedType, expected
 
 /**
  * 校验标准 WebAuthn 凭证的 rawId 和 type(仅标准路径使用)
- * - 查看定义:@see {@link validateResponseStructure}
+ * >查看定义:@see {@link validateResponseStructure}
  * @param {object} response - 凭证响应对象
  * @throws {Error} 校验失败时抛出
+ * @returns {boolean} 校验通过返回 true;失败抛出错误
  */
 const validateResponseStructure = (response) => {
     if (response.id !== response.rawId) throw new Error('凭证 ID 不是 base64url 编码');

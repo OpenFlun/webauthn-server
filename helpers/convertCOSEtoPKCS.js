@@ -1,4 +1,4 @@
-import { decodeFirst, concat } from './iso/index.js';
+import { concat, decodeFirst } from './iso/index.js';
 import { COSEKEYS } from './cose.js';
 
 /**

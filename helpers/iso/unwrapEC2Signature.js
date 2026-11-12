@@ -1,5 +1,5 @@
-import { AsnParser } from '@peculiar/asn1-schema';
 import { ECDSASigValue } from '@peculiar/asn1-ecc';
+import { AsnParser } from '@peculiar/asn1-schema';
 import { COSECRV } from '../cose.js';
 import { concat } from './isoUint8Array.js';
 

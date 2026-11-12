@@ -14,6 +14,7 @@ const issuerSubjectIDKey = {
 
 /**
  * 将颁发者或主体信息中的各个部分拼接成字符串,以便于比较;
+ * - 查看定义:@see {@link issuerSubjectToString}
  *
  * 拼接顺序看似随意,实际是固定的(C, O, OU, CN),保证字符串化时顺序一致即可;
  *

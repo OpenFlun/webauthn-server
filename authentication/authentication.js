@@ -1,9 +1,9 @@
+import { createPublicKey, createVerify } from 'node:crypto';
 import {
-    isBase64URL, toBuffer, fromBuffer, trimPadding, concat, utf8Tobytes, generateChallenge, toHash, getPassportClass,
-    parseAndValidateClientData, validateResponseStructure, parseAuthenticatorData, parseBackupFlags, matchExpectedRPID,
+    concat, fromBuffer, generateChallenge, getPassportClass, isBase64URL, matchExpectedRPID, parseAndValidateClientData,
+    parseAuthenticatorData, parseBackupFlags, toBuffer, toHash, trimPadding, utf8Tobytes, validateResponseStructure,
     verifySignature
 } from '../helpers/index.js';
-import { createPublicKey, createVerify } from 'node:crypto';
 
 /**
  * 生成用于 WebAuthn 认证的参数,可直接传递给 `navigator.credentials.get()`

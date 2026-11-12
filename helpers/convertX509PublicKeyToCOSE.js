@@ -1,7 +1,7 @@
+import { id_ecPublicKey, id_secp256r1, id_secp384r1, ECParameters } from '@peculiar/asn1-ecc';
+import { id_rsaEncryption, RSAPublicKey } from '@peculiar/asn1-rsa';
 import { AsnParser } from '@peculiar/asn1-schema';
 import { Certificate } from '@peculiar/asn1-x509';
-import { ECParameters, id_ecPublicKey, id_secp256r1, id_secp384r1 } from '@peculiar/asn1-ecc';
-import { id_rsaEncryption, RSAPublicKey } from '@peculiar/asn1-rsa';
 import { COSECRV, COSEKEYS, COSEKTY } from './cose.js';
 import { mapX509SignatureAlgToCOSEAlg } from './mapX509SignatureAlgToCOSEAlg.js';
 

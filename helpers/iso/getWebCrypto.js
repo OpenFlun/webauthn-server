@@ -1,7 +1,7 @@
 let webCrypto = undefined;
 /**
  * 内部使用的辅助对象,主要用于测试时模拟和重置缓存;
- * - 查看定义:{@link _getWebCryptoInternals}
+ * >查看定义:@see {@link _getWebCryptoInternals}
  *
  * @type {{
  *   stubThisGlobalThisCrypto: () => Crypto | undefined;
@@ -51,4 +51,4 @@ const getWebCrypto = () => {
     return toResolve;
 };
 
-export { _getWebCryptoInternals, MissingWebCrypto, getWebCrypto };
+export { _getWebCryptoInternals, getWebCrypto, MissingWebCrypto };

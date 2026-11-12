@@ -1,10 +1,10 @@
-import { isCOSEPublicKeyEC2, isCOSECrv, isCOSEPublicKeyRSA, isCOSEPublicKeyOKP, COSEKEYS } from '../cose.js';
+import { COSEKEYS, isCOSECrv, isCOSEPublicKeyEC2, isCOSEPublicKeyOKP, isCOSEPublicKeyRSA } from '../cose.js';
 import { getWebCrypto } from './getWebCrypto.js';
 import { mapCoseAlgToWebCryptoAlg } from './mapCoseAlgToWebCryptoAlg.js';
 import { unwrapEC2Signature } from './unwrapEC2Signature.js';
 import { verifyEC2 } from './verifyEC2.js';
-import { verifyRSA } from './verifyRSA.js';
 import { verifyOKP } from './verifyOKP.js';
+import { verifyRSA } from './verifyRSA.js';
 
 // ================================= digest函数 =================================
 /**
