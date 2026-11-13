@@ -68,7 +68,7 @@
     "@types/node": "^26.6.6"
   },
   "optionalDependencies": {
-    "@flun/passport-desktop-win32-x64-msvc": "1.0.9",
-    "@flun/passport-desktop-win32-ia32-msvc": "1.0.9"
+    "@flun/passport-desktop-win32-x64-msvc": "1.0.10",
+    "@flun/passport-desktop-win32-ia32-msvc": "1.0.10"
   }
 }
